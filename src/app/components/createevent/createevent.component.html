@@ -1,0 +1,197 @@
+<div class="card">
+
+  <h5 class="card-header info-color white-text text-center py-4">
+    <strong>Create Salon</strong>
+  </h5>
+
+  <!--Card content-->
+  <div class="card-body px-lg-5">
+
+    <!-- Form -->
+    <form class="md-form" style="color: #757575;">
+      <div class="row">
+        <div class="col-2">
+          <label for="materialSubscriptionFormPasswords">Name</label>
+        </div>
+        <div class="col-8">
+          <input type="text" id="materialSubscriptionFormPasswords" class="form-control"
+            placeholder="Lion City International Salon">
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <label for="input">Link</label>
+        </div>
+        <div class="col">
+
+          <input type="text" id="input" class="form-control" placeholder="www.exhibition.org">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <label for="selectCountry">Country</label>
+        </div>
+        <div class="col">
+          <select class="browser-default custom-select md-form mb-4 initialized" id="select">
+            <option value="" disabled selected>Select Country</option>
+            <option value="1">Singapore</option>
+            <option value="2">Europe</option>
+            <option value="3">India</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-2">
+          <label for="selectPatronage">Patronage</label>
+        </div>
+        <div class="col">
+          <select class="browser-default custom-select md-form mb-4 initialized" id="selectPatronage">
+            <option value="" disabled selected>Patronage</option>
+            <option value="1">FIAP</option>
+            <option value="2">GPU</option>
+            <option value="3">PSA</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <h4>Sections</h4>
+      </div>
+      <div class="list-group">
+          <div class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex flex-row">
+                  <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">COLOR </span>
+                      </div>
+                  
+                    <div class="form-check custom-control custom-checkbox ml-2">
+                      <input type="checkbox" class="form-check-input custom-control-input" id="checkboxcolor">
+                      <label class="custom-control-label" for="checkboxcolor"></label>
+                    </div>
+                    <input type="text" class="form-control" id="priceColor" placeholder="price">
+                    <label class="ml-1 position-relative" for="priceColor">$</label>
+                    <input type="text" class="form-control ml-2" id="discountColor" placeholder="discount">
+                    <label class="ml-1 position-relative" for="discountColor">%</label>
+                  </div>
+              </div>  
+          </div>
+          <div href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100">
+                  <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">MONOCHROME </span>
+                      </div>
+                  
+                    <div class="form-check custom-control custom-checkbox ml-2">
+                      <input type="checkbox" class="form-check-input custom-control-input" id="checkboxmono">
+                      <label class="custom-control-label" for="checkboxmono"></label>
+                    </div>
+                    <input type="text" class="form-control" id="priceMono" placeholder="price">
+                    <label class="ml-1 position-relative" for="priceMono">$</label>
+                    <input type="text" class="form-control ml-2" id="discountMono" placeholder="discount">
+                    <label class="ml-1 position-relative" for="discountMono">%</label>
+                  </div>
+              </div>  
+          </div>
+          <div href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100">
+                  <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">LIFE </span>
+                      </div>
+                  
+                    <div class="form-check custom-control custom-checkbox ml-2">
+                      <input type="checkbox" class="form-check-input custom-control-input" id="checkboxlife">
+                      <label class="custom-control-label" for="checkboxlife"></label>
+                    </div>
+                    <input type="text" class="form-control" id="priceLife" placeholder="price">
+                    <label class="ml-1 position-relative" for="priceLife">$</label>
+                    <input type="text" class="form-control ml-2" id="discountLife" placeholder="discount">
+                    <label class="ml-1 position-relative" for="discountLife">%</label>
+                  </div>
+              </div>  
+          </div>
+          <div href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100">
+                  <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">ACTION </span>
+                      </div>
+                  
+                    <div class="form-check custom-control custom-checkbox ml-2">
+                      <input type="checkbox" class="form-check-input custom-control-input" id="checkboxaction">
+                      <label class="custom-control-label" for="checkboxaction"></label>
+                    </div>
+                    <input type="text" class="form-control" id="priceAction" placeholder="price">
+                    <label class="ml-1 position-relative" for="priceAction">$</label>
+                    <input type="text" class="form-control ml-2" id="discountAction" placeholder="discount">
+                    <label class="ml-1 position-relative" for="discountAction">%</label>
+                  </div>
+              </div>  
+          </div>
+          <div href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100">
+                  <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">NATURE </span>
+                      </div>
+                  
+                    <div class="form-check custom-control custom-checkbox ml-2">
+                      <input type="checkbox" class="form-check-input custom-control-input" id="checkboxnature">
+                      <label class="custom-control-label" for="checkboxnature"></label>
+                    </div>
+                    <input type="text" class="form-control" id="priceNature" placeholder="price">
+                    <label class="ml-1 position-relative" for="priceNature">$</label>
+                    <input type="text" class="form-control ml-2" id="discountNature" placeholder="discount">
+                    <label class="ml-1 position-relative" for="discountNature">%</label>
+                  </div>
+              </div>  
+          </div>
+          <div href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100">
+                  <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">TRAVEL </span>
+                      </div>
+                  
+                    <div class="form-check custom-control custom-checkbox ml-2">
+                      <input type="checkbox" class="form-check-input custom-control-input" id="checkboxtravel">
+                      <label class="custom-control-label" for="checkboxtravel"></label>
+                    </div>
+                    <input type="text" class="form-control" id="priceTravel" placeholder="price">
+                    <label class="ml-1 position-relative" for="priceTravel">$</label>
+                    <input type="text" class="form-control ml-2" id="discountTravel" placeholder="discount">
+                    <label class="ml-1 position-relative" for="discountTravel">%</label>
+                  </div>
+              </div>  
+          </div>
+        </div>
+      <!-- <input type="email" id="materialSubscriptionFormEmail" class="form-control">
+          <label for="materialSubscriptionFormEmail">E-mail</label> -->
+
+      <div class="row">
+          <h5>Transacton ID</h5>
+          <input class="form-control" placeholder="Digwas Bellemane">
+      </div>
+      <div class="row">
+
+          <label class="position-relative" for="closingDate">Choose closing date</label>
+          <input type="date" id="closingDate" class="form-control" mdbInput>
+         
+      </div>
+      <div class="row">
+          <label class="position-relative" for="form7">Other notes</label>
+          <textarea id="form7" class="md-textarea form-control" rows="3"></textarea>
+
+      </div>
+      <button class="btn btn-outline-info btn-rounded btn-block z-depth-0 my-4 waves-effect"
+        type="submit">Create</button>
+
+    </form>
+
+  </div>
+
+</div>

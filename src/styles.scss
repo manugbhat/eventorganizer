@@ -1,0 +1,46 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.fa-google-plus,
+.fa-facebook-square {
+    font-size: 50px;
+    cursor: pointer;
+    color: #d5463a;
+    text-shadow: 2px 0 5px #888888;
+}
+
+.fa-facebook-square {
+    color: #4064ac;
+}
+
+.fa-google-plus:hover,
+.fa-facebook-square:hover,
+.fa-google-plus:focus,
+.fa-facebook-square:focus {
+    text-shadow: 2px 0 10px #999999;
+}
+
+.fa-tags {
+    font-size: 35px;
+    cursor: pointer;
+    color: #787878;
+    text-shadow: 2px 0 5px #888888;
+}
+
+.mat-tag-list {
+    height: 200px;
+    overflow-y: auto;
+}
+
+.content {
+    padding: 20px;
+}
