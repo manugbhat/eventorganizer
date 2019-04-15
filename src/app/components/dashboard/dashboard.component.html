@@ -1,4 +1,4 @@
-<h1>Admin Dashboard</h1>
+<h4>Admin Dashboard</h4>
 <div class="card">
 
   <h5 class="card-header info-color white-text text-center py-4">
@@ -10,6 +10,57 @@
 
     <!-- Form -->
     <form class="md-form" style="color: #757575;">
+        <div class="d-flex flex-column">
+            <input type="text" class="form-control" id="salonName" placeholder="Enter Salon Name">
+            <h5>OR</h5>
+            <label class="position-relative" for="closingDate">Choose closing date</label>
+            <input type="date" id="closingDate" class="form-control" mdbInput>
+        </div>
+        <div class="d-flex flex-row">
+          <button class="btn btn-outline-info  btn-block z-depth-0 my-4 waves-effect"
+          type="submit">Search</button>
+          <button class="btn btn-outline-info  ml-4 btn-block z-depth-0 my-4 waves-effect" (click)="createSalon()">Create Salon</button>
+        </div>
     </form>
   </div>
+  <table class="table table-striped table-responsive-md btn-table">
+
+      <thead>
+        <tr>
+          <th>Salon Name</th>
+          <th>Location</th>
+          <th>Closing Date</th>
+          <th>Manage</th>
+        </tr>
+      </thead>
+    
+      <tbody>
+        <tr>
+          <th scope="row">Lion City International</th>
+          <td>Singapore</td>
+          <td>22/4/2019</td>
+          <td>
+            <button mdbBtn color="primary" outline="true" size="sm" mdbWavesEffect type="button" class="m-0" (click)="manageEvent()">Manage</button>
+          </td>
+          
+        </tr>
+        <tr>
+            <th scope="row">Lion City International</th>
+            <td>Singapore</td>
+            <td>29/4/2019</td>
+            <td>
+              <button mdbBtn color="primary" outline="true" size="sm" mdbWavesEffect type="button" class="m-0">Manage</button>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Lion City International</th>
+            <td>Singapore</td>
+            <td>6/5/2019</td>
+            <td>
+              <button mdbBtn color="primary" outline="true" size="sm" mdbWavesEffect type="button" class="m-0">Manage</button>
+            </td>
+        </tr>
+      </tbody>
+    
+    </table>
 </div>

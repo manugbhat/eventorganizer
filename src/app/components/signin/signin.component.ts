@@ -29,14 +29,7 @@ export class SigninComponent implements OnInit {
     /* this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then(data => {
       console.log(data);
     }); */
-    this.router.navigate(['/createevent']);
-  }
-
-  signInWithFB(): void {
-   /*  this.authService.signIn(FacebookLoginProvider.PROVIDER_ID).then(data => {
-      this.user = data;
-    }); */
-    this.router.navigate(['/bonvoyage']);
+    this.router.navigate(['/dashboard']);
   }
 
   
