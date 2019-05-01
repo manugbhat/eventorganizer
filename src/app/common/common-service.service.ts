@@ -9,7 +9,7 @@ import { APIConstants } from '../constants/api-constants';
 export class CommonService {
   private sharedData: CommonData
   private sideNav: string[] = SideNavConstants.SIDENAV_ELEMENTS;
-  public apiEndpoint: string = APIConstants.IVV_API_ENDPOINT;
+
   
     /**
      * Getter $sideNav
