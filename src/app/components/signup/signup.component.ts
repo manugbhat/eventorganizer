@@ -1,15 +1,61 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { CommonService } from '../../common/common-service.service';
+import { CommonData } from '../../common/common-data.model';
+import { SideNavConstants } from '../../common/sidenav.constants';
+import { SignInService } from '../signin/signin.service';
+
 
 @Component({
-  selector: 'app-signup',
+  selector: 'app-signin',
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.scss']
+  styleUrls: ['./signup.component.scss'],
+  providers: [SignInService]
 })
 export class SignupComponent implements OnInit {
+  signupValidationForm: FormGroup;
+  places;
+  errorMessage: string;
+  successMessage: string;
 
-  constructor() { }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private commonSharedService: CommonService,
+    private signInService: SignInService) {
+    this.signupValidationForm = fb.group({
+      name: [null, [Validators.required, Validators.pattern('[a-zA-Z ]+$')]],
+      email: [null, [Validators.required, Validators.email]],
+      phone: [null, [Validators.required, Validators.pattern('([0-9]{2})?(.*)?([0-9]{10})')]],
+      city: [null, Validators.required],
+      password: [null, Validators.required],
+    });
+  }
+
+  get email() { return this.signupValidationForm.get('email'); }
+  get password() { return this.signupValidationForm.get('password'); }
+  get city() { return this.signupValidationForm.get('city'); }
+  get name() { return this.signupValidationForm.get('name'); }
 
   ngOnInit() {
+
+  }
+
+  signup() {
+    this.signInService.signupUser(this.signupValidationForm.getRawValue()).subscribe(res => {
+      if (res.prop && res.prop.created) {
+        this.errorMessage = undefined;
+        this.successMessage = 'User registered successfully';
+      } else {
+        this.successMessage = undefined;
+        this.errorMessage = res.prop.msg;
+      }
+    });
+  }
+
+  signin() {
+    this.router.navigate(['login']);
   }
 
 }

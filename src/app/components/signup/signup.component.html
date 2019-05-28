@@ -1,3 +1,49 @@
-<p>
-  signup works!
-</p>
+<div class="signup">
+  <div class="row align-items-center justify-content-center">
+      <div class="col-lg-4 col-md-6 col-sm-8 col-12 content">
+          <h2 class="text-center">Sign Up</h2>
+          <hr class="my-3" />
+          <form [formGroup]="signupValidationForm" (ngSubmit)="signup()">
+              <div class="alert alert-danger text-center py-1" role="alert" *ngIf="errorMessage">
+                  {{errorMessage}}
+              </div>
+              <div class="alert alert-success text-center py-1" role="alert" *ngIf="successMessage">
+                  {{successMessage}}
+              </div>
+              <div class="md-form">
+                  <i class="fa fa-user prefix"></i>
+                  <input mdbInput mdbValidate formControlName="name" type="text" class="form-control" id="name" placeholder="">
+                  <label for="name" class="active">Full Name</label>
+              </div>
+              <div class="md-form">
+                  <i class="fa fa-envelope prefix"></i>
+                  <input mdbInput mdbValidate formControlName="email" type="email" class="form-control" id="email" placeholder="">
+                  <label for="email" class="active">Email Address</label>
+              </div>
+              <div class="md-form">
+                  <i class="fa fa-phone prefix"></i>
+                  <input mdbInput mdbValidate formControlName="phone" type="text" class="form-control" id="phone" placeholder="">
+                  <label for="phone" class="active">Phone</label>
+              </div>
+              <div class="md-form">
+                  <i class="fa fa-city prefix"></i>
+                  <input mdbInput mdbValidate formControlName="city" type="text" class="form-control" id="city" placeholder="">
+                  <label for="city" class="active">City</label>
+              </div>
+              <div class="md-form my-3">
+                  <i class="fa fa-lock prefix"></i>
+                  <input mdbInput mdbValidate formControlName="password" type="password" class="form-control" id="password" placeholder="">
+                  <label for="password" class="active">Password</label>
+              </div>
+              <div class="row text-center">
+                  <div class="col-6 mb-2">
+                      <button mdbBtn type="submit" color="info" rounded="true" mdbWavesEffect [disabled]="!signupValidationForm.valid">Signup</button>
+                  </div>
+                  <div class="col-6 mb-2">
+                      <button mdbBtn type="button" color="default" mdbWavesEffect (click)="signin()">Signin</button>
+                  </div>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>

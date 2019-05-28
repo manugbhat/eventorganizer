@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-eventmgmt',
@@ -7,8 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EventmgmtComponent implements OnInit {
 
-  constructor() { }
-
+  constructor(private route: ActivatedRoute) {
+    this.route.params.subscribe( params => console.log(params) );
+  }
   ngOnInit() {
   }
 

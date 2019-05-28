@@ -1,12 +1,42 @@
-<mat-card>
-    <mat-card-title class="textsize">Not signed in</mat-card-title>
-    <mat-card-subtitle class="textsize">Sign in with</mat-card-subtitle>
-    <mat-card-content>
-        <mat-grid-list cols="1" rowHeight="50px">
-            <mat-grid-tile>
-                <button mat-icon-button (click)="signInWithGoogle()"><i class="textsize fab fa-google-plus"></i></button>
-            </mat-grid-tile>
-            
-        </mat-grid-list>
-    </mat-card-content>
-</mat-card>
+<div class="signin">
+    <div class="row align-items-center justify-content-center">
+        <ng-container *ngIf="!loggedIn; else signout">
+            <div class="col-lg-4 col-md-6 col-sm-8 col-12 content">
+                <h2 class="text-center">Sign in</h2>
+                <hr class="my-3" />
+                <form [formGroup]="loginValidationForm" (ngSubmit)="login()">
+                    <div class="alert alert-danger text-center py-1" role="alert" *ngIf="errorMessage">
+                        {{errorMessage}}
+                    </div>
+                    <div class="md-form">
+                        <i class="fa fa-envelope prefix"></i>
+                        <input mdbInput mdbValidate formControlName="email" type="email" class="form-control" id="email" placeholder="">
+                        <label for="email" class="active">Email Address or Mobile Number</label>
+                    </div>
+                    <div class="md-form my-3">
+                        <i class="fa fa-lock prefix"></i>
+                        <input mdbInput mdbValidate formControlName="password" type="password" class="form-control" id="password" placeholder="">
+                        <label for="password" class="active">Password</label>
+                    </div>
+                    <div class="text-right"><a routerLink="">Forgot your password?</a></div>
+                    <div class="row text-center">
+                        <div class="col-6 mb-2">
+                            <button mdbBtn type="submit" color="info" rounded="true" mdbWavesEffect [disabled]="!loginValidationForm.valid">Login</button>
+                        </div>
+                        <div class="col-6 mb-2">
+                            <button mdbBtn type="button" color="default" mdbWavesEffect (click)="signup()">Signup</button>
+                        </div>
+                    </div>
+                </form>
+                
+            </div>
+        </ng-container>
+        <ng-template #signout>
+                <div class="col-lg-4 col-md-6 col-sm-8 col-12 content text-center">
+                    <h6 class="text-center">Sign out?</h6>
+                    <button mdbBtn type="button" color="default" mdbWavesEffect (click)="logout()">Logout</button>
+                </div>
+          
+        </ng-template>
+    </div>
+</div>

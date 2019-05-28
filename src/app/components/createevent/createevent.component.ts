@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { APIConstants } from 'src/app/constants/api-constants';
-import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, Validators, FormControl } from '@angular/forms';
 import { SalonSection } from 'src/app/common/salon-section.model';
 
 @Component({
@@ -17,6 +17,10 @@ export class CreateeventComponent implements OnInit {
   sectionElements: SalonSection[];
   section: string="";
   status: string = "";
+  countries: Array<any> =  [{value : "1" , label: "Singapore"},
+                            {value : "2" , label: "Europe"},
+                            {value : "3" , label: "Malaysia"},
+                            {value : "4" , label: "Germany"}];
   constructor(private http: HttpClient, private formBuilder:FormBuilder ) { 
     
   }
@@ -34,28 +38,35 @@ export class CreateeventComponent implements OnInit {
       name:["", Validators.required],
       link: ["", Validators.required],
       country: ["", Validators.required],
-      patronage: [""],
-      transactionId: "",
-      paypalId: "",
-      notes: "",
-      closingDate: "",
+      patronage: ["", Validators.required],
+      transactionId: ["", Validators.required],
+      paypalId: ["", Validators.required],
+      notes: ["", Validators.required],
+      closingDate: ["", Validators.required],
       sections: this.formBuilder.array([sectionGroup]),
       section: ""
 
     });
 
+
   }
   public saveSalon() {
-    const salon = Object.assign({}, this.salonForm.value);
+    let salon = Object.assign({}, this.salonForm.value);
     delete salon["section"];
     const tempD = salon.closingDate;
-    salon.closingDate = tempD+"T00:00:00Z";
+    salon.closingDate = tempD+"T23:59:59.000Z";
+    this.countries.forEach((countr) => {
+      if( salon.country === countr.value) {
+        salon.country = countr.label;
+      }
+    })
     this.http.post(APIConstants.API_ENDPOINT+"salons",
                                       salon, { "headers":  APIConstants.HTTP_HEADERS  }
-                                    ).subscribe((re)=>{
-                                      if(re){
+                                    ).subscribe((re : any)=>{
+                                      if(re && re._id){
                                         this.status = "success";
                                         this.createMessage = " Salon created successfully";
+                                        this.salonForm.reset();
                                       }
                                     },(error) => {
                                       console.log("error");

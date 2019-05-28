@@ -1,0 +1,42 @@
+<div class="card">
+
+    <h6 class="card-header info-color white-text text-center">
+      <strong>Create Club</strong>
+    </h6>
+  
+    <!--Card content-->
+    <div class="card-body px-lg-5">
+      <form [formGroup]="clubForm" (ngSubmit)="saveClub()" class="md-form needs-validation" style="color: #757575;">
+            <div class="row">
+              <div class="col-2">
+                <label for="name">Name</label>
+              </div>
+              <div class="col-8">
+                <input formControlName="name" type="text" id="name" class="form-control"
+                  placeholder="" mdbInput mdbValidate>
+              </div>
+  
+            </div>
+            <div class="row">
+              <div class="col-2">
+                <label for="input">Admin Name</label>
+              </div>
+              <div class="col">
+  
+                <input type="text" formControlName="adminName" id="adminName" class="form-control" placeholder="" mdbInput mdbValidate>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-2">
+                <label for="act">Activities</label>
+              </div>
+              <div class="col">
+                <textarea formControlName="activities" id="act" class="form-control" placeholder="" mdbInput mdbValidate></textarea>
+              </div>
+            </div>
+            <button class="btn btn-outline-info btn-rounded btn-block z-depth-0 my-4 waves-effect" 
+                type="submit" [disabled]="!clubForm.valid">Create</button>
+      </form>
+    </div>
+  </div>
+  

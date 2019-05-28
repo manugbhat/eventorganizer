@@ -9,16 +9,16 @@
   <div class="card-body px-lg-5">
 
     <!-- Form -->
-    <form class="md-form" style="color: #757575;">
+    <form [formGroup]="searchForm" class="md-form" style="color: #757575;">
         <div class="d-flex flex-column">
-            <input type="text" class="form-control" id="salonName" placeholder="Enter Salon Name">
+            <input type="text" formControlName="salonName" class="form-control" id="salonName" placeholder="Enter Salon Name">
             <h5>OR</h5>
             <label class="position-relative" for="closingDate">Choose closing date</label>
-            <input type="date" id="closingDate" class="form-control" mdbInput>
+            <input type="date" formControlName="closingDate" id="closingDate" class="form-control" mdbInput>
         </div>
         <div class="d-flex flex-row">
           <button class="btn btn-outline-info  btn-block z-depth-0 my-4 waves-effect"
-          type="submit">Search</button>
+          type="submit" (click)="searchSalon()">Search</button>
           <button class="btn btn-outline-info  ml-4 btn-block z-depth-0 my-4 waves-effect" (click)="createSalon()">Create Salon</button>
         </div>
     </form>
@@ -35,31 +35,16 @@
       </thead>
     
       <tbody>
-        <tr>
-          <th scope="row">Lion City International</th>
-          <td>Singapore</td>
-          <td>22/4/2019</td>
+        <tr *ngFor="let salon of searchResult; let i = index;">
+          <th scope="row">{{salon.name}}</th>
+          <td>{{salon.country}}</td>
+          <td>{{salon.closingDate}}</td>
           <td>
-            <button mdbBtn color="primary" outline="true" size="sm" mdbWavesEffect type="button" class="m-0" (click)="manageEvent()">Manage</button>
+            <button mdbBtn color="primary" outline="true" size="sm" mdbWavesEffect type="button" class="m-0" (click)="manageEvent(salon._id)">Manage</button>
           </td>
           
         </tr>
-        <tr>
-            <th scope="row">Lion City International</th>
-            <td>Singapore</td>
-            <td>29/4/2019</td>
-            <td>
-              <button mdbBtn color="primary" outline="true" size="sm" mdbWavesEffect type="button" class="m-0">Manage</button>
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">Lion City International</th>
-            <td>Singapore</td>
-            <td>6/5/2019</td>
-            <td>
-              <button mdbBtn color="primary" outline="true" size="sm" mdbWavesEffect type="button" class="m-0">Manage</button>
-            </td>
-        </tr>
+       
       </tbody>
     
     </table>

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CommonData } from './common-data.model';
 import { SideNavConstants } from './sidenav.constants';
 import { APIConstants } from '../constants/api-constants';
+import { Subject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,26 @@ import { APIConstants } from '../constants/api-constants';
 export class CommonService {
   private sharedData: CommonData
   private sideNav: string[] = SideNavConstants.SIDENAV_ELEMENTS;
+  public authToken: string = "";
 
+  private subject = new Subject<string>();
+  private dataSubject = new Subject<CommonData>();
+    setToken(token: string) {
+        this.authToken = token;
+        this.subject.next(this.authToken);
+    }
+
+    getToken(): Observable<string> {
+      return this.subject.asObservable();
+    }
+
+    getData(): Observable<CommonData> {
+      return this.dataSubject.asObservable();
+    }
+
+  public get $authToken(): string  {
+		return this.authToken;
+	}
   
     /**
      * Getter $sideNav
@@ -35,6 +55,7 @@ export class CommonService {
   }
   public set $shared(data: CommonData) {
     this.sharedData = data;
+    this.dataSubject.next(data);
   }
 
   

@@ -20,19 +20,25 @@ import { LogoutComponent } from './components/logout/logout.component';
 import { ResultsComponent } from './components/results/results.component';
 import { SigninComponent } from './components/signin/signin.component';
 import { MaterialModule } from './material/material.module';
-
+import { NgMaterialModule } from './angular-material.module';
+import { SignupComponent } from './components/signup/signup.component';
+import { ClubComponent } from './components/club/club.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    ClubComponent,
     CreateeventComponent,
     DashboardComponent,
     EventmgmtComponent,
     InviteComponent,
     HomeComponent,
+    InviteComponent,
     SigninComponent,
     LogoutComponent,
     ResultsComponent,
+    SignupComponent,
+    SigninComponent
   ],
   imports: [
     BrowserModule,
@@ -42,6 +48,7 @@ import { MaterialModule } from './material/material.module';
     FormsModule,
     MaterialModule,
     MDBBootstrapModule.forRoot(),
+    NgMaterialModule,
     ReactiveFormsModule,
     HttpClientModule
   ],

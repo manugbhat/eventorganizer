@@ -1,6 +1,6 @@
 {
-  "name": "Voyago",
-  "short_name": "Voyago",
+  "name": "EventOrganizer",
+  "short_name": "EventOrganizer",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",

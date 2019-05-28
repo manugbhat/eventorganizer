@@ -6,25 +6,33 @@
     <div class="row">   
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <img class="img-fluid" src="assets/images/landingimage.jpg" alt="First slide">
+        
+
+            <!-- </mdb-carousel-item>
+                    </mdb-carousel> -->
+            <h2>Exhibition Event management</h2>
+
+            <p class="card-text">
+                Join clubs. Create events. Subscribe to notifications. Manage participants. 
+                Dashboard view of all events and stages. One click management of all activities
+            </p>
+            <p>
+                <mat-card *ngIf="notSignedIn">
+                    <mat-card-title class="textsize">Not signed in</mat-card-title>
+                    
+                    <mat-card-content>
+                        <mat-grid-list cols="1" rowHeight="50px">
+                            <mat-grid-tile>
+                                <button mat-icon-button (click)="login()"><mdb-icon fas icon="user"></mdb-icon></button>
+                                
+                            </mat-grid-tile>
+                            
+                        </mat-grid-list>
+                    </mat-card-content>
+                </mat-card>
+            </p>
         </div>
     </div>
-    
-
-    <!-- </mdb-carousel-item>
-                </mdb-carousel> -->
-    <h2>Exhibition Event management</h2>
-    <!-- <p>
-                    As a frequent traveller you get to update your travelling experiences and as well learn the travelling habits of others. As a newbie you get to know the travellers and places they have already travelled and a lot of details about their trips which you
-                    can use to plan your travel. It is as if you are living someone's journey and you know what mistakes you should not repeat :-) !.
-                </p> -->
-    <p class="card-text">
-        Join clubs. Create events. Subscribe to notifications. Manage participants. 
-        Dashboard view of all events and stages. One click management of all activities
-    </p>
-    <p>
-        <app-signin class="signin"></app-signin>
-    </p>
-    
     <button *ngIf="addToHome" mat-raised-button color="warn" (click)="installToHome()">Add this to Home Screen</button>
 
 </div>

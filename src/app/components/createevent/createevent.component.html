@@ -15,7 +15,7 @@
         </div>
         <div class="col-8">
           <input formControlName="name" type="text" id="materialSubscriptionFormPasswords" class="form-control"
-            placeholder="Lion City International Salon" required>
+            placeholder="Lion City International Salon" mdbInput mdbValidate>
         </div>
  
 
@@ -26,7 +26,7 @@
         </div>
         <div class="col">
 
-          <input type="text" formControlName="link" id="input" class="form-control" placeholder="www.exhibition.org">
+          <input type="text" formControlName="link" id="input" class="form-control" placeholder="www.exhibition.org" mdbInput mdbValidate>
         </div>
       </div>
       <div class="row">
@@ -34,11 +34,10 @@
           <label for="selectCountry">Country</label>
         </div>
         <div class="col">
-          <select formControlName="country" class="browser-default custom-select md-form mb-4 initialized" id="select">
-            <option value="" disabled selected>Select Country</option>
-            <option value="1">Singapore</option>
-            <option value="2">Europe</option>
-            <option value="3">India</option>
+          <select placeholder = "Country" formControlName="country" class="browser-default custom-select md-form mb-4 initialized" id="selectCountry" mdbValidate>
+            <ng-container *ngFor="let country of countries">
+              <option value="{{country.value}}">{{country.label}}</option>
+            </ng-container>
           </select>
         </div>
 
@@ -49,7 +48,7 @@
           <label for="selectPatronage">Patronage</label>
         </div>
         <div class="col">
-          <select formControlName="patronage" class="browser-default custom-select md-form mb-4 initialized" id="selectPatronage" multiple>
+          <select formControlName="patronage" class="browser-default custom-select md-form mb-4 initialized" id="selectPatronage" multiple mdbValidate>
 
             <option value="FIAP">FIAP</option>
             <option value="GPU">GPU</option>
@@ -62,7 +61,7 @@
       <h6>Add sections and pricing</h6>
       <div class="d-flex flex-row">
         <div class="w-75">
-            <input formControlName="section" class="form-control" placeholder="COLOR,MONCHROME etc.">
+            <input formControlName="section" class="form-control" placeholder="COLOR,MONCHROME etc." mdbInput mdbValidate>
           </div>
           <div class="w-25 align-self-center p-2">
               <mdb-icon fas icon="plus-square" size="lg" (click)="addSection()"></mdb-icon>
@@ -73,13 +72,13 @@
               
                   <div [formGroupName]="i" class="d-flex flex-row">
                     <div class="col ml-5">
-                      <input type="checkbox" class="form-control custom-control-input" id="enabled-{{i}}" fromControlName="enabled">
+                      <input type="checkbox" class="form-control custom-control-input" id="enabled-{{i}}" fromControlName="enabled" mdbInput mdbValidate>
 
                       <label class="custom-control-label" for="enabled-{{i}}">{{section.value.name}}</label>
                     </div>
-                    <div class="col"><input type="text" class="form-control" id="price-{{i}}" formControlName="price" placeholder="$ price"></div>
+                    <div class="col"><input type="text" class="form-control" id="price-{{i}}" formControlName="price" placeholder="$ price" mdbInput mdbValidate></div>
                     <div class="col">
-                      <input type="text" class="form-control" id="discount-{{i}}" formControlName="discount" placeholder="discount%">
+                      <input type="text" class="form-control" id="discount-{{i}}" formControlName="discount" placeholder="discount%" mdbInput mdbValidate>
                     </div>
                   </div>
       </div>
@@ -90,25 +89,25 @@
         <h5>Transaction ID</h5>
       <div class="d-flex flex-row">
         
-          <input formControlName="transactionId" class="form-control" placeholder="Digwas Bellemane">
+          <input formControlName="transactionId" class="form-control" placeholder="Digwas Bellemane" mdbInput mdbValidate>
       </div>
       <h5>Paypal ID</h5>
       <div class="d-flex flex-row">
-        <input formControlName="paypalId" class="form-control" placeholder="Digwas Bellemane">
+        <input formControlName="paypalId" class="form-control" placeholder="Digwas Bellemane" mdbInput mdbValidate>
       </div>
       <div class="d-flex flex-row">
 
           <label class="position-relative" for="closingDate">Choose closing date</label>
-          <input type="date" formControlName="closingDate" id="closingDate" class="form-control" mdbInput>
+          <input type="date" formControlName="closingDate" id="closingDate" class="form-control" mdbInput mdbValidate >
          
       </div>
       <div class="d-flex flex-row">
           <label class="position-relative" for="form7">Other notes</label>
-          <textarea id="form7" formControlName="notes" class="md-textarea form-control" rows="3"></textarea>
+          <textarea id="form7" formControlName="notes" class="md-textarea form-control" rows="3" mdbInput mdbValidate></textarea>
 
       </div>
       <button class="btn btn-outline-info btn-rounded btn-block z-depth-0 my-4 waves-effect" 
-        type="submit">Create</button>
+        type="submit" [disabled]="!salonForm.valid">Create</button>
 
     </form>
     <p *ngIf="status === 'success'" class="note note-success">{{createMessage}}</p>
