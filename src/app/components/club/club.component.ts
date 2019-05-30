@@ -9,6 +9,8 @@ import { APIConstants } from 'src/app/constants/api-constants';
     templateUrl: './club.component.html',
 })
 export class ClubComponent implements OnInit{
+    status: string;
+    createMessage: string;
     clubForm: FormGroup;
     constructor(private http: HttpClient, private common: CommonService, private formBuilder:FormBuilder){}
     ngOnInit(){
@@ -25,7 +27,17 @@ export class ClubComponent implements OnInit{
         if( this.common.authToken ) {
             header["X-Auth-Token"] = this.common.authToken;
         }
+        let that = this;
         this.http.post(APIConstants.API_ENDPOINT+"clubs", club, { "headers":  APIConstants.HTTP_HEADERS  })
-           .subscribe((re : any)=>{ });
+           .subscribe((res : any)=>{
+                if(res) {
+                        that.status = "success";
+                        that.createMessage = "Club created!";
+                       }
+                     },(error) => {
+                        console.log("error");
+                        that.status = "failure";
+                        that.createMessage = "Some problem creating Club!";
+                      });
     }
 }

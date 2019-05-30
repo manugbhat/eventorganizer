@@ -27,6 +27,7 @@ export class SignupComponent implements OnInit {
     this.signupValidationForm = fb.group({
       name: [null, [Validators.required, Validators.pattern('[a-zA-Z ]+$')]],
       email: [null, [Validators.required, Validators.email]],
+      inviteCode: [null, Validators.required],
       phone: [null, [Validators.required, Validators.pattern('([0-9]{2})?(.*)?([0-9]{10})')]],
       city: [null, Validators.required],
       password: [null, Validators.required],

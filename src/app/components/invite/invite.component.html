@@ -37,5 +37,6 @@
           <button class="btn btn-outline-info btn-rounded btn-block z-depth-0 my-4 waves-effect" 
               type="submit" [disabled]="!inviteForm.valid">Invite</button>
     </form>
+    <p *ngIf="status" class="note note-success">{{message}}</p>
   </div>
 </div>

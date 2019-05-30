@@ -16,21 +16,23 @@
                 Join clubs. Create events. Subscribe to notifications. Manage participants. 
                 Dashboard view of all events and stages. One click management of all activities
             </p>
-            <p>
+          
+            <div class="d-flex justify-content-center">
                 <mat-card *ngIf="notSignedIn">
                     <mat-card-title class="textsize">Not signed in</mat-card-title>
+                    <mat-card-subtitle>Sign in by clicking below</mat-card-subtitle>
                     
                     <mat-card-content>
                         <mat-grid-list cols="1" rowHeight="50px">
                             <mat-grid-tile>
-                                <button mat-icon-button (click)="login()"><mdb-icon fas icon="user"></mdb-icon></button>
+                                <button mat-icon-button (click)="login()"><mdb-icon fas icon="user" size="2x"></mdb-icon></button>
                                 
                             </mat-grid-tile>
                             
                         </mat-grid-list>
                     </mat-card-content>
                 </mat-card>
-            </p>
+            </div>
         </div>
     </div>
     <button *ngIf="addToHome" mat-raised-button color="warn" (click)="installToHome()">Add this to Home Screen</button>

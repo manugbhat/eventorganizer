@@ -37,6 +37,8 @@
             <button class="btn btn-outline-info btn-rounded btn-block z-depth-0 my-4 waves-effect" 
                 type="submit" [disabled]="!clubForm.valid">Create</button>
       </form>
+      <p *ngIf="status === 'success'" class="note note-success">{{createMessage}}</p>
+      <p *ngIf="status === 'failure'" class="note note-danger">{{createMessage}}</p>
     </div>
   </div>
   

@@ -18,6 +18,7 @@ const routes: Routes = [
   { path: 'club', component: ClubComponent },
   { path: 'createevent', component: CreateeventComponent },
   { path: 'invite', component: InviteComponent },
+  { path: 'invite/:code', component: InviteComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'signin', component: SigninComponent },
   { path: 'signup', component: SignupComponent },

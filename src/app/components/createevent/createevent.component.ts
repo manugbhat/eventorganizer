@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { APIConstants } from 'src/app/constants/api-constants';
 import { FormGroup, FormBuilder, FormArray, Validators, FormControl } from '@angular/forms';
 import { SalonSection } from 'src/app/common/salon-section.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-createevent',
@@ -21,8 +22,8 @@ export class CreateeventComponent implements OnInit {
                             {value : "2" , label: "Europe"},
                             {value : "3" , label: "Malaysia"},
                             {value : "4" , label: "Germany"}];
-  constructor(private http: HttpClient, private formBuilder:FormBuilder ) { 
-    
+  constructor(private http: HttpClient, private formBuilder:FormBuilder, private route: ActivatedRoute ) { 
+    this.route.params.subscribe( params => console.log(params) );
   }
   
   ngOnInit() {
