@@ -78,12 +78,15 @@ export class CreateeventComponent implements OnInit {
   } 
   public addSection(){
     const sections = this.salonForm.get("sections") as FormArray;
-    
     const name = this.salonForm.get("section").value;
     sections.push(this.formBuilder.group({name: name,
                                           enabled: true,
                                           price: 0,
                                           discount: 0}));
 
+  }
+
+  get sectionsArray() {
+    return <FormArray> this.salonForm.get("sections");
   }
 }

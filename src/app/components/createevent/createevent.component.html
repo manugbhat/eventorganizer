@@ -68,7 +68,7 @@
           </div>
       </div>
 
-      <div formArrayName="sections" class="list-group" *ngFor="let section of salonForm.get('sections').controls; let i = index;">
+      <div formArrayName="sections" class="list-group" *ngFor="let section of sectionsArray.controls; let i = index;">
               
                   <div [formGroupName]="i" class="d-flex flex-row">
                     <div class="col ml-5">
