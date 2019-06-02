@@ -20,13 +20,14 @@ export class InviteComponent implements OnInit {
   constructor(private http: HttpClient,private formBuilder: FormBuilder, private common: CommonService, private route: ActivatedRoute, private router : Router) {
     this.route.params.subscribe( params => { 
       console.log(params);
-      this.inviteCode = params.code;
+      this.inviteCode = params.code ? params.code : "";
     });
   }
 
   ngOnInit() {
     if( this.inviteCode !== "") {
-      this.router.navigate(["/signup"]);
+      this.common.$shared.inviteCode = this.inviteCode;
+      this.router.navigate([`/signup`]);
     }
     this.inviteForm = this.formBuilder.group({
                                                 name: '',

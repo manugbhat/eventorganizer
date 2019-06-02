@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CommonService } from '../common/common-service.service';
+import { CommonData } from '../common/common-data.model';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,10 @@ export class AppComponent {
   signedIn: boolean = false;
 
   constructor( private breakpointObserver: BreakpointObserver, private commonService: CommonService) {
-    this.fillerNav = commonService.$sideNav;
+    this.fillerNav = this.commonService.$sideNav;
+    if ( !this.commonService.$shared ) {
+      this.commonService.$shared = new CommonData();
+    } 
     this.commonService.getToken().subscribe((token) => {
       if(token !== "") {
         //if(this.commonService.$shared && this.commonService.$shared.$user) {

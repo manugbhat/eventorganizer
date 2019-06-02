@@ -18,7 +18,7 @@ export class SignupComponent implements OnInit {
   places;
   errorMessage: string;
   successMessage: string;
-
+  invite: string;
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -40,7 +40,8 @@ export class SignupComponent implements OnInit {
   get name() { return this.signupValidationForm.get('name'); }
 
   ngOnInit() {
-
+    this.invite = this.commonSharedService.$shared.inviteCode ? this.commonSharedService.$shared.inviteCode: "";
+    this.signupValidationForm.get("inviteCode").setValue(this.invite);
   }
 
   signup() {
@@ -48,6 +49,7 @@ export class SignupComponent implements OnInit {
       if (res.prop && res.prop.created) {
         this.errorMessage = undefined;
         this.successMessage = 'User registered successfully';
+        this.router.navigate(["/signin"]);
       } else {
         this.successMessage = undefined;
         this.errorMessage = res.prop.msg;
