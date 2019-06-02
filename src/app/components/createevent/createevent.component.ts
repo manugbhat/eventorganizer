@@ -88,5 +88,5 @@ export class CreateeventComponent implements OnInit {
 
   get sectionsArray() {
     return <FormArray> this.salonForm.get("sections");
-  }
+  } 
 }
