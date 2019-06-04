@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'angularx-social-login';
 import { Router } from '@angular/router';
 import { CommonService } from '../../common/common-service.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-logout',
@@ -10,11 +11,12 @@ import { CommonService } from '../../common/common-service.service';
 })
 export class LogoutComponent implements OnInit {
 
-  constructor(private authService: AuthService, private router: Router, private commonService: CommonService) { }
+  constructor(private router: Router, private commonService: CommonService,private cookieService: CookieService) { }
 
   ngOnInit() {
-    this.authService.signOut();
-    this.commonService.$shared.$user = undefined;
+    this.commonService.$shared = undefined;
+    this.commonService.setToken("");
+    this.cookieService.deleteAll();
     this.router.navigate(['/']);
   }
 

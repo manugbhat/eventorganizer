@@ -10,7 +10,7 @@ export class User {
     private phone: string;
     
     private interests: string[];
-    private userId: string;
+    private _id: string;
 
 
     /**
@@ -65,16 +65,16 @@ export class User {
      * Getter $userId
      * @return {string}
      */
-	public get $userId(): string {
-		return this.userId;
+	public get $_id(): string {
+		return this._id;
 	}
 
     /**
      * Setter $userId
      * @param {string} value
      */
-	public set $userId(value: string) {
-		this.userId = value;
+	public set $_id(value: string) {
+		this._id = value;
 	}
 
 

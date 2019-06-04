@@ -26,12 +26,16 @@
               <input type="text" formControlName="email" id="email" class="form-control" placeholder="" mdbInput mdbValidate>
             </div>
           </div>
-          <div class="row">
+          <div *ngIf="role === 'ADMIN'" class="row">
             <div class="col-2">
               <label for="club">Club</label>
             </div>
             <div class="col">
-              <input type="text" formControlName="club" id="club" class="form-control" placeholder="" mdbInput mdbValidate>
+              <select placeholder = "Choose Club" formControlName="club" class="browser-default custom-select md-form mb-4 initialized" id="club" mdbValidate>
+                <ng-container *ngFor="let club of clubs">
+                  <option value="{{club._id}}">{{club.name}}</option>
+                </ng-container>
+              </select>
             </div>
           </div>
           <button class="btn btn-outline-info btn-rounded btn-block z-depth-0 my-4 waves-effect" 

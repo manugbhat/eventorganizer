@@ -16,9 +16,10 @@ export class ClubComponent implements OnInit{
     ngOnInit(){
         this.clubForm = this.formBuilder.group({
             name: ['', Validators.required],
-            adminName: '',
+            adminName: this.common.$shared.$user.$name,
             activities: '',
         });
+
     }
 
     saveClub(){

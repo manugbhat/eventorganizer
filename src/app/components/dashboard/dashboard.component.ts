@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { APIConstants } from 'src/app/constants/api-constants';
 import { FilterModel } from 'src/app/constants/api-filter.model';
 import { Salon } from 'src/app/common/salon';
+import { CommonService } from 'src/app/common/common-service.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,17 +15,21 @@ import { Salon } from 'src/app/common/salon';
 export class DashboardComponent implements OnInit {
   searchForm: FormGroup;
   searchResult: Salon[];
-  constructor(private router: Router, private http: HttpClient, private formBuilder:FormBuilder) { }
+  isAdmin: boolean= false;
+  constructor(private router: Router, private http: HttpClient, private formBuilder:FormBuilder, private common: CommonService) { }
 
   ngOnInit() {
     this.searchForm = this.formBuilder.group({
       salonName:[""],
       closingDate: [""]
     });
+    if(this.common.$shared.$user && ( this.common.$shared.$user.$role === "ADMIN" || this.common.$shared.$user.$role === "SUPERADMIN")) {
+      this.isAdmin = true;
+    }
   }
 
   public createSalon(){
-    this.router.navigate(['/createevent']);
+    this.router.navigate(['/salon']);
   }
   public searchSalon(){
     let name: string = this.searchForm.get("salonName").value;

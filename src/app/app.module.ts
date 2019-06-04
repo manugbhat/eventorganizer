@@ -23,6 +23,7 @@ import { MaterialModule } from './material/material.module';
 import { NgMaterialModule } from './angular-material.module';
 import { SignupComponent } from './components/signup/signup.component';
 import { ClubComponent } from './components/club/club.component';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { ClubComponent } from './components/club/club.component';
     provide: AuthServiceConfig,
   },
     HttpClientModule,
-    CommonService],
+    CommonService,
+    CookieService ],
   bootstrap: [AppComponent],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,

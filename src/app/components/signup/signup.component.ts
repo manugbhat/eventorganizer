@@ -25,7 +25,7 @@ export class SignupComponent implements OnInit {
     private commonSharedService: CommonService,
     private signInService: SignInService) {
     this.signupValidationForm = fb.group({
-      name: [null, [Validators.required, Validators.pattern('[a-zA-Z ]+$')]],
+      fullName: [null, [Validators.required, Validators.pattern('[a-zA-Z ]+$')]],
       email: [null, [Validators.required, Validators.email]],
       inviteCode: [null, Validators.required],
       phone: [null, [Validators.required, Validators.pattern('([0-9]{2})?(.*)?([0-9]{10})')]],
@@ -49,7 +49,7 @@ export class SignupComponent implements OnInit {
       if (res.prop && res.prop.created) {
         this.errorMessage = undefined;
         this.successMessage = 'User registered successfully';
-        this.router.navigate(["/signin"]);
+        this.router.navigate(["/login"]);
       } else {
         this.successMessage = undefined;
         this.errorMessage = res.prop.msg;

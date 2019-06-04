@@ -17,6 +17,8 @@ export class InviteComponent implements OnInit {
   status: boolean;
   message: string;
   inviteCode: string = "";
+  role: string ="";
+  clubs: any[] = [];
   constructor(private http: HttpClient,private formBuilder: FormBuilder, private common: CommonService, private route: ActivatedRoute, private router : Router) {
     this.route.params.subscribe( params => { 
       console.log(params);
@@ -25,6 +27,7 @@ export class InviteComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.role = this.common.$shared.$user.$role;
     if( this.inviteCode !== "") {
       this.common.$shared.inviteCode = this.inviteCode;
       this.router.navigate([`/signup`]);
@@ -32,7 +35,7 @@ export class InviteComponent implements OnInit {
     this.inviteForm = this.formBuilder.group({
                                                 name: '',
                                                 email: ['',[Validators.required, Validators.email]],
-                                                club: '',
+                                                club: ['',[Validators.required]],
                                             });
     let header = APIConstants.HTTP_HEADERS;
         if( this.common.authToken ) {
@@ -40,19 +43,21 @@ export class InviteComponent implements OnInit {
         }
     const filter: FilterModel = new FilterModel();
     let that = this;
-    this.http.get<any[]>(APIConstants.API_ENDPOINT+"clubs", 
+    if( this.role === "ADMIN" ) {
+      this.http.get<any[]>(APIConstants.API_ENDPOINT+"clubs", 
         { "headers":  header, 
           "params" : { "filter" :  JSON.stringify(filter) }
         }
        ).subscribe( (res:any[]) => {
-          that.inviteForm.get("club").setValue(res[0].name);
-          that.clubId = res[0]._id;
+          that.clubs = res;
+          // that.clubId = res[0]._id;
        });
+    }
     
   }
   invite(){
     let invite = Object.assign({}, this.inviteForm.value);
-    invite.club = this.clubId;
+    //invite.club = this.clubId ? this.clubId : "";
     let that = this;
     this.http.post(APIConstants.API_ENDPOINT+"invites",
                                       invite, { "headers":  APIConstants.HTTP_HEADERS  }

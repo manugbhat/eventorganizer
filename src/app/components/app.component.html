@@ -11,22 +11,24 @@
             <li class="nav-item active">
                 <a class="nav-link" routerLink="">Home</a>
             </li>
-            <li class="nav-item" *ngIf="signedIn"><a class="nav-link" routerLink="">Profile</a></li>
-            <li class="nav-item" *ngIf="signedIn"><a class="nav-link" routerLink="/invite">Invite</a></li>
-            <li class="nav-item" *ngIf="signedIn"><a class="nav-link" routerLink="/club">Clubs</a></li>
-        </ul>
-        <!-- <ul class="navbar-nav ml-auto">
             
-            <li class="nav-item" *ngIf="false">
+            <li class="nav-item" *ngIf="signedIn"><a class="nav-link" routerLink="/dashboard">Dashboard</a></li>
+            <li class="nav-item" *ngIf="signedIn && isAdmin"><a class="nav-link" routerLink="/invite">Invite</a></li>
+            <li class="nav-item" *ngIf="signedIn && isAdmin"><a class="nav-link" routerLink="/club">Clubs</a></li>
+            <li class="nav-item" *ngIf="signedIn && isAdmin"><a class="nav-link" routerLink="/salon">Salon</a></li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            
+            <li class="nav-item" *ngIf="signedIn">
                 <a class="nav-link dropdown-toggle" id="navbarProfileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-user"></i> Profile
                 </a>
                 <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarProfileDropdown">
                     <a class="dropdown-item" href="#">My account</a>
-                    <a class="dropdown-item" href="#">Log out</a>
+                    <a class="dropdown-item" href="#" routerLink="/logout">Log out</a>
                 </div>
             </li>
-        </ul> -->
+        </ul>
     </div>
 </nav>
 <router-outlet></router-outlet>

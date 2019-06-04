@@ -1,4 +1,9 @@
-<h4>Manage the Salon</h4>>
+<h4>Manage {{(salon && salon.name) ? salon.name : ''}} Salon</h4>
+<div class="d-flex flex-row">
+  <button class="btn btn-outline-info  btn-block z-depth-0 my-4 waves-effect"
+  type="submit" (click)="publish()">Publish</button>
+  <button class="btn btn-outline-info  ml-4 btn-block z-depth-0 my-4 waves-effect" (click)="showMembers()">Show Members</button>
+</div>
 <table class="table table-striped table-responsive-md btn-table">
 
     <thead>
@@ -11,31 +16,16 @@
     </thead>
   
     <tbody>
-      <tr>
-        <th scope="row">Dinesh Allamaprabhu</th>
-        <td>Done</td>
-        <td>Yes</td>
-        <td>
-          <input type="text" class="form-control" mdbInput>
-        </td>
-        
-      </tr>
-      <tr>
-        <th scope="row">Kishore Ravikumar</th>
-        <td>No</td>
-        <td>Yes</td>
-        <td>
-          <input type="text" class="form-control" mdbInput>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">Sathyanarayana C R</th>
-        <td>No</td>
-        <td>No</td>
-        <td>
-          <input type="text" class="form-control" mdbInput>
-        </td>
-      </tr>
+      <ng-container *ngFor="let member of members; let i = index">
+        <tr>
+          <td>
+            <mat-checkbox (change)="selectMember($event, i, member)" [color]="warn" [checked]="member.checked">{{member.fullName}}</mat-checkbox>
+          </td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </ng-container>
     </tbody>
   
   </table>

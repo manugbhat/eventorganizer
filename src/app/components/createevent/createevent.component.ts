@@ -5,6 +5,7 @@ import { APIConstants } from 'src/app/constants/api-constants';
 import { FormGroup, FormBuilder, FormArray, Validators, FormControl } from '@angular/forms';
 import { SalonSection } from 'src/app/common/salon-section.model';
 import { ActivatedRoute } from '@angular/router';
+import { CommonService } from 'src/app/common/common-service.service';
 
 @Component({
   selector: 'app-createevent',
@@ -22,7 +23,7 @@ export class CreateeventComponent implements OnInit {
                             {value : "2" , label: "Europe"},
                             {value : "3" , label: "Malaysia"},
                             {value : "4" , label: "Germany"}];
-  constructor(private http: HttpClient, private formBuilder:FormBuilder, private route: ActivatedRoute ) { 
+  constructor(private http: HttpClient, private formBuilder:FormBuilder, private route: ActivatedRoute, private common: CommonService ) { 
     this.route.params.subscribe( params => console.log(params) );
   }
   
@@ -61,6 +62,10 @@ export class CreateeventComponent implements OnInit {
         salon.country = countr.label;
       }
     })
+    let header = APIConstants.HTTP_HEADERS;
+        if( this.common.authToken ) {
+            header["X-Auth-Token"] = this.common.authToken;
+        }
     this.http.post(APIConstants.API_ENDPOINT+"salons",
                                       salon, { "headers":  APIConstants.HTTP_HEADERS  }
                                     ).subscribe((re : any)=>{

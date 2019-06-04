@@ -1,6 +1,6 @@
 <div class="signin">
     <div class="row align-items-center justify-content-center">
-        <ng-container *ngIf="!loggedIn; else signout">
+        <ng-container *ngIf="!loggedIn">
             <div class="col-lg-4 col-md-6 col-sm-8 col-12 content">
                 <h2 class="text-center">Sign in</h2>
                 <hr class="my-3" />
@@ -31,12 +31,6 @@
                 
             </div>
         </ng-container>
-        <ng-template #signout>
-                <div class="col-lg-4 col-md-6 col-sm-8 col-12 content text-center">
-                    <h6 class="text-center">Sign out?</h6>
-                    <button mdbBtn type="button" color="default" mdbWavesEffect (click)="logout()">Logout</button>
-                </div>
-          
-        </ng-template>
+        
     </div>
 </div>

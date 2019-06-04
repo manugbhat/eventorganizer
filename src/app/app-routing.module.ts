@@ -16,7 +16,7 @@ const routes: Routes = [
   { path: 'login', component: SigninComponent },
   { path: 'logout', component: LogoutComponent },
   { path: 'club', component: ClubComponent },
-  { path: 'createevent', component: CreateeventComponent },
+  { path: 'salon', component: CreateeventComponent },
   { path: 'invite', component: InviteComponent },
   { path: 'invite/:code', component: InviteComponent },
   { path: 'dashboard', component: DashboardComponent },

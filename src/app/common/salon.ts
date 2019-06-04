@@ -1,8 +1,10 @@
 
 
 export class Salon {
+    public _id: string ="";
     public name: string = "";
     public link: string = "";
+    public club: string = "";
     public country: string = "";
     public patronage: string[] = [""];
     public transactionId: string = "";
