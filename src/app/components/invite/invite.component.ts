@@ -5,6 +5,7 @@ import { APIConstants } from 'src/app/constants/api-constants';
 import { CommonService } from 'src/app/common/common-service.service';
 import { FilterModel } from 'src/app/constants/api-filter.model';
 import { ActivatedRoute, Router } from '@angular/router';
+import * as _ from "lodash";
 
 @Component({
   selector: 'app-invite',
@@ -49,7 +50,8 @@ export class InviteComponent implements OnInit {
           "params" : { "filter" :  JSON.stringify(filter) }
         }
        ).subscribe( (res:any[]) => {
-          that.clubs = res;
+          that.clubs = _.filter(res, (club) => { return club?true: false;});
+          console.log(that.clubs);
           // that.clubId = res[0]._id;
        });
     }

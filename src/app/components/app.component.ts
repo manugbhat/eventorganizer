@@ -20,9 +20,11 @@ export class AppComponent {
   signedIn: boolean = false;
   role: string = "";
   isAdmin: boolean = false;
+  userName: string ="";
   constructor( private breakpointObserver: BreakpointObserver, private commonService: CommonService, private cookieService: CookieService) {
     this.fillerNav = this.commonService.$sideNav;
     const userName = this.cookieService.get("UserName");
+    this.userName = userName;
     const userRole = this.cookieService.get("UserRole");
     const authToken = this.cookieService.get("UserAuthToken");
     if ( userName && !this.commonService.$shared ) {
@@ -43,6 +45,7 @@ export class AppComponent {
         //if(this.commonService.$shared && this.commonService.$shared.$user) {
           this.signedIn = true;
           this.role = this.commonService.$shared.$user.$role;
+          this.userName = this.commonService.$shared.$user.$name;
           if( this.role === "ADMIN" || this.role === "SUPERADMIN" ) {
             this.isAdmin = true;
           }

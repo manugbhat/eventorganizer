@@ -1,4 +1,4 @@
-<h4>Admin Dashboard</h4>
+<h4>{{isAdmin? 'Admin' : 'Member'}} Dashboard</h4>
 <div class="card">
 
   <h5 class="card-header info-color white-text text-center py-4">
@@ -19,7 +19,7 @@
         <div class="d-flex flex-row">
           <button class="btn btn-outline-info  btn-block z-depth-0 my-4 waves-effect"
           type="submit" (click)="searchSalon()">Search</button>
-          <button class="btn btn-outline-info  ml-4 btn-block z-depth-0 my-4 waves-effect" (click)="createSalon()">Create Salon</button>
+          <button *ngIf="isAdmin" class="btn btn-outline-info  ml-4 btn-block z-depth-0 my-4 waves-effect" (click)="createSalon()">Create Salon</button>
         </div>
     </form>
   </div>

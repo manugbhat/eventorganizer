@@ -26,6 +26,9 @@ export class DashboardComponent implements OnInit {
     if(this.common.$shared.$user && ( this.common.$shared.$user.$role === "ADMIN" || this.common.$shared.$user.$role === "SUPERADMIN")) {
       this.isAdmin = true;
     }
+    let header = APIConstants.HTTP_HEADERS;
+    
+      this.searchSalon();
   }
 
   public createSalon(){
@@ -33,28 +36,34 @@ export class DashboardComponent implements OnInit {
   }
   public searchSalon(){
     let name: string = this.searchForm.get("salonName").value;
-    let closingDate: string = this.searchForm.get("closingDate").value+"T23:59:59.000Z";
+    let closingDate: string;
+    if(this.searchForm.get("closingDate").value !== "") {
+
+      closingDate = this.searchForm.get("closingDate").value+"T23:59:59.000Z";
+    }
     console.log("clos ", closingDate);
     let header = APIConstants.HTTP_HEADERS;
     const filter: FilterModel = new FilterModel();
     if( name !== "" ) { 
       filter.$where({name : {regexp: "/"+name+"/"}});
     }
-    else if ( closingDate !== "" ){
+    else if ( closingDate && closingDate !== "" ){
       filter.$where({closingDate : { lte : closingDate }});
     }
-    
+    if( this.common.authToken ) {
+      header["X-Auth-Token"] = this.common.authToken;
+    }
     let that = this;
     this.http.get(APIConstants.API_ENDPOINT+"salons", { "headers":  header, 
-                    "params" : { "filter" :  JSON.stringify(filter) }
-                    }).subscribe((result: Salon[])=>{
-                       result.map((salon: Salon) => {
-                        salon.closingDate =  salon.closingDate.replace(/T.*/gi, function (x) {
-                          return "";
+                      "params" : { "filter" :  JSON.stringify(filter) }
+                      }).subscribe((result: Salon[])=>{
+                        result.map((salon: Salon) => {
+                          salon.closingDate =  salon.closingDate.replace(/T.*/gi, function (x) {
+                            return "";
+                          });
                         });
+                        this.searchResult = result;
                       });
-                      that.searchResult = result;
-                    });
   }
   public manageEvent(id: string){
     this.router.navigate([`/manageevent/${id}`]);
