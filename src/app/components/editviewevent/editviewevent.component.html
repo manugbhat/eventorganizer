@@ -1,0 +1,118 @@
+<div class="card">
+
+  <h6 class="card-header info-color white-text text-center">
+    <strong>View/Edit Salon</strong>
+  </h6>
+
+  <!--Card content-->
+  <div class="card-body px-lg-5">
+
+    <!-- Form -->
+    <form [formGroup]="salonForm" (ngSubmit)="saveSalon()" class="md-form needs-validation" style="color: #757575;">
+      <div class="row">
+        <div class="col-2">
+          <label for="materialSubscriptionFormPasswords">Name</label>
+        </div>
+        <div class="col-8">
+          <input formControlName="name" type="text" id="materialSubscriptionFormPasswords" class="form-control"
+            placeholder="Lion City International Salon" mdbInput mdbValidate>
+        </div>
+ 
+
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <label for="input">Link</label>
+        </div>
+        <div class="col">
+
+          <input type="text" formControlName="link" id="input" class="form-control" placeholder="www.exhibition.org" mdbInput mdbValidate>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <label for="selectCountry">Country</label>
+        </div>
+        <div class="col">
+          <select placeholder = "Country" formControlName="country" class="browser-default custom-select md-form mb-4 initialized" id="selectCountry" mdbValidate>
+            <ng-container *ngFor="let country of countries">
+              <option value="{{country.value}}" [selected]="country.selected">{{country.label}}</option>
+            </ng-container>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-2">
+          <label for="selectPatronage">Patronage</label>
+        </div>
+        <div class="col">
+          <select formControlName="patronage" class="browser-default custom-select md-form mb-4 initialized" id="selectPatronage" multiple mdbValidate>
+
+            <option value="FIAP">FIAP</option>
+            <option value="GPU">GPU</option>
+            <option value="PSA">PSA</option>
+            <option value="PSA">ICS</option>
+          </select>
+        </div>
+      </div>
+      <h5>Sections</h5>
+      <h6>Add sections and pricing</h6>
+      <div class="d-flex flex-row">
+        <div class="w-75">
+            <input formControlName="section" class="form-control" placeholder="COLOR,MONCHROME etc." mdbInput mdbValidate>
+          </div>
+          <div class="w-25 align-self-center p-2">
+              <mdb-icon fas icon="plus-square" size="lg" (click)="addSection()"></mdb-icon>
+          </div>
+      </div>
+
+      <div formArrayName="sections" class="list-group" *ngFor="let section of sectionsArray.controls; let i = index;">
+              
+                  <div [formGroupName]="i" class="d-flex flex-row">
+                    <div class="col ml-5">
+                      <input type="checkbox" class="form-control custom-control-input" id="enabled-{{i}}" fromControlName="enabled" mdbInput mdbValidate>
+
+                      <label class="custom-control-label" for="enabled-{{i}}">{{section.value.name}}</label>
+                    </div>
+                    <div class="col"><input type="text" class="form-control" id="price-{{i}}" formControlName="price" placeholder="$ price" mdbInput mdbValidate></div>
+                    <div class="col">
+                      <input type="text" class="form-control" id="discount-{{i}}" formControlName="discount" placeholder="discount%" mdbInput mdbValidate>
+                    </div>
+                  </div>
+      </div>
+        
+      <!-- <input type="email" id="materialSubscriptionFormEmail" class="form-control">
+          <label for="materialSubscriptionFormEmail">E-mail</label> -->
+
+        <h5>Transaction ID</h5>
+      <div class="d-flex flex-row">
+        
+          <input formControlName="transactionId" class="form-control" placeholder="Digwas Bellemane" mdbInput mdbValidate>
+      </div>
+      <h5>Paypal ID</h5>
+      <div class="d-flex flex-row">
+        <input formControlName="paypalId" class="form-control" placeholder="Digwas Bellemane" mdbInput mdbValidate>
+      </div>
+      <div class="d-flex flex-row">
+
+          <label class="position-relative" for="closingDate">Choose closing date</label>
+          <input type="date" formControlName="closingDate" id="closingDate" class="form-control" mdbInput mdbValidate >
+         
+      </div>
+      <div class="d-flex flex-row">
+          <label class="position-relative" for="form7">Other notes</label>
+          <textarea id="form7" formControlName="notes" class="md-textarea form-control" rows="3" mdbInput mdbValidate></textarea>
+
+      </div>
+      <button *ngIf="isAdmin" class="btn btn-outline-info btn-rounded btn-block z-depth-0 my-4 waves-effect" 
+        type="submit" [disabled]="!salonForm.valid">Update</button>
+
+    </form>
+    <p *ngIf="status === 'success'" class="note note-success">{{createMessage}}</p>
+    <p *ngIf="status === 'failure'" class="note note-danger">{{createMessage}}</p>
+
+  </div>
+
+</div>

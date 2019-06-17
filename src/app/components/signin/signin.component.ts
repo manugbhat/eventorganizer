@@ -68,14 +68,26 @@ export class SigninComponent implements OnInit {
           user.$phone = res.prop.user.phone;
           user.$role = res.prop.user.role;
           user.$_id = res.prop.user._id;
-          let common: CommonData = new CommonData();
-          common.$user = user;
-          this.commonSharedService.$shared = common;
+          let common: CommonData;
+          if(!this.commonSharedService.$shared){
+
+            common = new CommonData();
+            common.$user = user;
+            this.commonSharedService.$shared = common;
+          } else {
+            this.commonSharedService.$shared.$user = user;
+          }
+          
           this.cookieService.set("UserAuthToken", res.prop.token);
           this.cookieService.set("UserName", user.$name);
           this.cookieService.set("UserRole", user.$role);
           this.commonSharedService.setToken(res.prop.token);
-          this.router.navigate(['/']);
+          if(user.$role === "ADMIN" && this.commonSharedService.$shared.firstLogin ) {
+            this.commonSharedService.$shared.firstLogin = false;
+            this.router.navigate(['/club']);
+          } else {
+            this.router.navigate(['/']);
+          }
           //alert(JSON.stringify(res));
         } else {
           this.errorMessage = 'Invalid Username or Password';

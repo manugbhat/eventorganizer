@@ -2,6 +2,7 @@
 
 export class Salon {
     public _id: string ="";
+    public salonId: number ;
     public name: string = "";
     public link: string = "";
     public club: string = "";

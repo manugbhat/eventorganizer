@@ -6,6 +6,7 @@ import { CommonService } from 'src/app/common/common-service.service';
 import { Salon } from 'src/app/common/salon';
 import { User } from 'src/app/common/user.model';
 import { APIConstants } from 'src/app/constants/api-constants';
+import { FilterModel } from 'src/app/constants/api-filter.model';
 
 @Component({
   selector: 'app-eventmgmt',
@@ -16,10 +17,12 @@ export class EventmgmtComponent implements OnInit {
   isAdmin: boolean = false;
   role: string = "";
   eventId: string ="";
+  shortlist: string ="";
   members: User[] = [];
   selectedMembers: User[] = [];
+  currentMember: User;
   salon: Salon ;
-  message: string= "";
+  message: {msg: string, status: string} = { msg : '' , status : ''};
   constructor(private http: HttpClient, private route: ActivatedRoute, private common: CommonService) {
     let that = this;
     this.route.params.subscribe( params => {
@@ -28,6 +31,9 @@ export class EventmgmtComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.common.$shared.$user && ( this.common.$shared.$user.$role === "ADMIN" || this.common.$shared.$user.$role === "SUPERADMIN")) {
+      this.isAdmin = true;
+    }
     let header = APIConstants.HTTP_HEADERS;
     let that = this;
     this.http.get(APIConstants.API_ENDPOINT+`salons/${this.eventId}`,
@@ -40,38 +46,100 @@ export class EventmgmtComponent implements OnInit {
   public showMembers(): void {
     let header = APIConstants.HTTP_HEADERS;
     let that = this;
-    this.http.get(APIConstants.API_ENDPOINT+`clubs/${this.salon.club}`, 
-                    { "headers":  header }).subscribe((result)=>{ 
-                      let members = result["members"];
-                      _.forEach(members, (m) => {
-                        m["checked"] = true;
+    const filter: FilterModel = new FilterModel();
+    if( this.salon.club !== "" ) { 
+      filter.$where({clubId : this.salon.club, salonId: this.salon.salonId});
+    }
+    this.http.get(APIConstants.API_ENDPOINT+'salonMembers', 
+                    { "headers":  header, 
+                    "params" : { "filter" :  JSON.stringify(filter) }
+                    }).subscribe((result: any)=>{
+                      that.members = result;
+                      that.members.forEach((member) => {
+                        member["checked"] = true;
+                        switch(member["status"]) {
+                          case "RECDINV" :  member["status"] = "Invite Sent";
+                                            member["checked"] = false;
+                                            member["showShortlist"] = false;
+                                            break;
+                          case "INTERESTED" : member["status"] = "Invite Accepted";
+                                              member["showShortlist"] = true;
+                                              member["checked"] = false;
+                                              break;
+                          case "PAID" : member["status"] = "Payment done";
+                                        member["showShortlist"] = true;
+                                        member["checked"] = false;
+                                        break;
+                          case "SHORTLISTED" : member["status"] = "Shortlisted";
+                                        member["showShortlist"] = false;
+                                        member["checked"] = false;
+                                        break;
+                          default : member["status"] ="";
+                                    member["showShortlist"] = false;
+                                    break;
+  
+                        } 
                       });
-                      that.members = members;
-                      that.selectedMembers = members
+                      that.selectedMembers = _.filter(that.members, (member) => {
+                        return member.checked;
+                      })
+                      
                     });
   
   }
   
   public publish(): void {
-    let sMemberIds: string[] = _.map(this.selectedMembers, (u : User) => {
+    let sMemberUIds: string[] = _.map(this.selectedMembers, (u : User) => {
+      return u["userId"];
+    });
+    let sMemberIds: string[] = _.map(this.selectedMembers, (u: User) => {
       return u["_id"];
     });
-    let salonPublish : any = { salonId : this.salon._id, members: sMemberIds, name: this.salon.name};
+    let salonPublish : any = { salonId : this.salon.salonId, members: sMemberUIds, memberIds: sMemberIds, name: this.salon.name};
     let header = APIConstants.HTTP_HEADERS;
     let that = this;
     this.http.post(APIConstants.API_ENDPOINT+"salons/publish",salonPublish, { "headers":  header })
-             .subscribe((result)=>{
+             .subscribe((result: any[])=>{
                             if(result) {
-                              that.message = "Published successfully";
+                              that.message.msg = `Published successfully to ${result.length} members`;
+                              that.message.status = "SUCCESS";
                             }
+                        },
+                        (error: any) => {
+                              that.message.msg = `Something went wrong`;
+                              that.message.status = "ERROR";
                         });
   }
 
   public selectMember(event , i, member): void {
-    if(member.checked){
+    if(!member.checked && event.checked){
+      this.selectedMembers.push(member);
+    } else if( member.checked && !event.checked){
       this.selectedMembers.splice(i,1);
-      console.log(this.selectedMembers);
     }
+  }
+
+  public setCurrent(m) {
+    this.currentMember = m;
+  }
+
+  public updateShortlist(){
+    this.currentMember["shortListed"] = (this.shortlist == "1") ?true: false;
+    let header = APIConstants.HTTP_HEADERS;
+    let that = this;
+    this.currentMember["state"] = this.currentMember["shortListed"] ? "SHORTLISTED": "REJECTED";
+    const salonId = this.currentMember["_id"];
+    delete this.currentMember["_id"];
+    delete this.currentMember["shortListed"];
+    delete this.currentMember["showShortlist"];
+    delete this.currentMember["checked"];
+    /* const filter: FilterModel = new FilterModel();
+    filter.$where({userId : this.currentMember["userId"], salonId: this.currentMember["salonId"]}); */
+    this.http.patch(APIConstants.API_ENDPOINT+`user-salons/${salonId}`, this.currentMember,
+                                                            { "headers":  header, 
+                                                              //"params" : { "filter" :  JSON.stringify(filter) }
+                                                              }).subscribe((result: any)=>{ console.log(result); });
+
   }
 
 }

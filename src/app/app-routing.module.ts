@@ -1,14 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ClubComponent } from './components/club/club.component';
 import { CreateeventComponent } from './components/createevent/createevent.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { EditViewEventComponent } from './components/editviewevent/editviewevent.component';
 import { EventmgmtComponent } from './components/eventmgmt/eventmgmt.component';
 import { HomeComponent } from './components/home/home.component';
+import { InviteComponent } from './components/invite/invite.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { SigninComponent } from './components/signin/signin.component';
 import { SignupComponent } from './components/signup/signup.component';
-import { InviteComponent } from './components/invite/invite.component';
-import { ClubComponent } from './components/club/club.component';
 
 
 const routes: Routes = [
@@ -22,7 +23,8 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'signin', component: SigninComponent },
   { path: 'signup', component: SignupComponent },
-  { path: 'manageevent/:id', component: EventmgmtComponent }];
+  { path: 'manageevent/:id', component: EventmgmtComponent },
+  { path: 'editviewevent/:id', component: EditViewEventComponent }];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

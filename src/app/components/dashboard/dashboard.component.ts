@@ -16,6 +16,8 @@ export class DashboardComponent implements OnInit {
   searchForm: FormGroup;
   searchResult: Salon[];
   isAdmin: boolean= false;
+  currentSalon: Salon;
+  paymentId: string;
   constructor(private router: Router, private http: HttpClient, private formBuilder:FormBuilder, private common: CommonService) { }
 
   ngOnInit() {
@@ -42,7 +44,7 @@ export class DashboardComponent implements OnInit {
       closingDate = this.searchForm.get("closingDate").value+"T23:59:59.000Z";
     }
     console.log("clos ", closingDate);
-    let header = APIConstants.HTTP_HEADERS;
+    
     const filter: FilterModel = new FilterModel();
     if( name !== "" ) { 
       filter.$where({name : {regexp: "/"+name+"/"}});
@@ -50,22 +52,66 @@ export class DashboardComponent implements OnInit {
     else if ( closingDate && closingDate !== "" ){
       filter.$where({closingDate : { lte : closingDate }});
     }
+    this.load(filter);
+    
+  }
+
+  public load(filter: FilterModel){
+    let header = APIConstants.HTTP_HEADERS;
     if( this.common.authToken ) {
       header["X-Auth-Token"] = this.common.authToken;
     }
-    let that = this;
-    this.http.get(APIConstants.API_ENDPOINT+"salons", { "headers":  header, 
+
+    const API : string  = (this.isAdmin) ? "salons" : "user-salons";
+    this.http.get(APIConstants.API_ENDPOINT+API, { "headers":  header, 
                       "params" : { "filter" :  JSON.stringify(filter) }
                       }).subscribe((result: Salon[])=>{
                         result.map((salon: Salon) => {
-                          salon.closingDate =  salon.closingDate.replace(/T.*/gi, function (x) {
+                          salon.closingDate =  (salon.closingDate) ? salon.closingDate.replace(/T.*/gi, function (x) {
                             return "";
-                          });
+                          }): "";
+                          if(salon["salonName"]) {
+                            salon.name = salon["salonName"];
+                          }
                         });
                         this.searchResult = result;
                       });
   }
   public manageEvent(id: string){
     this.router.navigate([`/manageevent/${id}`]);
+  }
+
+  public update(salon: Salon, action: string){
+    switch(action) {
+      case "INTERESTED" : salon["state"] = "INTERESTED";
+                          break;
+      case "PAID" : salon["state"] = "PAID";
+                          break;
+      default : break;
+    }
+    const salonId = salon._id;
+    delete salon.closingDate;
+    delete salon.name;
+    delete salon._id;
+    const API : string  = (this.isAdmin) ? "salons/" : "user-salons/";
+    let header = APIConstants.HTTP_HEADERS;
+    if( this.common.authToken ) {
+      header["X-Auth-Token"] = this.common.authToken;
+    }
+    this.http.patch(APIConstants.API_ENDPOINT+API+salonId , salon, {"headers":  header}).subscribe((result: any) => {
+      this.load( new FilterModel());
+    });
+  }
+  public salonDetails(id: string) {
+    this.router.navigate([`/editviewevent/${id}`]);
+  }
+
+  public setCurrent(cur ) {
+    this.currentSalon = cur;
+  }
+  public updatePayment(){
+    this.currentSalon.transactionId = this.paymentId;
+    this.update(this.currentSalon, "PAID");
+
   }
 }

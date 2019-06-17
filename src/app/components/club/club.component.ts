@@ -29,6 +29,7 @@ export class ClubComponent implements OnInit{
             header["X-Auth-Token"] = this.common.authToken;
         }
         let that = this;
+        club["clubId"] = 0;
         this.http.post(APIConstants.API_ENDPOINT+"clubs", club, { "headers":  APIConstants.HTTP_HEADERS  })
            .subscribe((res : any)=>{
                 if(res) {

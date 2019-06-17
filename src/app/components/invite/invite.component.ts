@@ -6,6 +6,7 @@ import { CommonService } from 'src/app/common/common-service.service';
 import { FilterModel } from 'src/app/constants/api-filter.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as _ from "lodash";
+import { CommonData } from 'src/app/common/common-data.model';
 
 @Component({
   selector: 'app-invite',
@@ -28,11 +29,15 @@ export class InviteComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.role = this.common.$shared.$user.$role;
+    
     if( this.inviteCode !== "") {
+      if(!this.common.$shared) {
+        this.common.$shared = new CommonData();
+      }
       this.common.$shared.inviteCode = this.inviteCode;
       this.router.navigate([`/signup`]);
     }
+    this.role = this.common.$shared.$user.$role;
     this.inviteForm = this.formBuilder.group({
                                                 name: '',
                                                 email: ['',[Validators.required, Validators.email]],
@@ -54,6 +59,9 @@ export class InviteComponent implements OnInit {
           console.log(that.clubs);
           // that.clubId = res[0]._id;
        });
+    }
+    if( this.role === "SUPERADMIN" ) {
+      this.inviteForm.get("club").setValue("System");
     }
     
   }

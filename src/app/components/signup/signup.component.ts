@@ -49,6 +49,7 @@ export class SignupComponent implements OnInit {
       if (res.prop && res.prop.created) {
         this.errorMessage = undefined;
         this.successMessage = 'User registered successfully';
+        this.commonSharedService.$shared.firstLogin = true;
         this.router.navigate(["/login"]);
       } else {
         this.successMessage = undefined;

@@ -7,23 +7,24 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { AuthServiceConfig } from 'angularx-social-login';
+import { CookieService } from 'ngx-cookie-service';
 import { environment } from '../environments/environment';
+import { NgMaterialModule } from './angular-material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { CommonService } from './common/common-service.service';
 import { AppComponent } from './components/app.component';
+import { ClubComponent } from './components/club/club.component';
 import { CreateeventComponent } from './components/createevent/createevent.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { EditViewEventComponent } from './components/editviewevent/editviewevent.component';
 import { EventmgmtComponent } from './components/eventmgmt/eventmgmt.component';
 import { HomeComponent } from './components/home/home.component';
 import { InviteComponent } from './components/invite/invite.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { ResultsComponent } from './components/results/results.component';
 import { SigninComponent } from './components/signin/signin.component';
-import { MaterialModule } from './material/material.module';
-import { NgMaterialModule } from './angular-material.module';
 import { SignupComponent } from './components/signup/signup.component';
-import { ClubComponent } from './components/club/club.component';
-import { CookieService } from 'ngx-cookie-service';
+import { MaterialModule } from './material/material.module';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { CookieService } from 'ngx-cookie-service';
     ClubComponent,
     CreateeventComponent,
     DashboardComponent,
+    EditViewEventComponent,
     EventmgmtComponent,
     InviteComponent,
     HomeComponent,

@@ -6,29 +6,39 @@ import { FormGroup, FormBuilder, FormArray, Validators, FormControl } from '@ang
 import { SalonSection } from 'src/app/common/salon-section.model';
 import { ActivatedRoute } from '@angular/router';
 import { CommonService } from 'src/app/common/common-service.service';
+import { Salon } from 'src/app/common/salon';
+import { FilterModel } from 'src/app/constants/api-filter.model';
 
 @Component({
-  selector: 'app-createevent',
-  templateUrl: './createevent.component.html',
-  styleUrls: ['./createevent.component.scss']
+  selector: 'edit-view-event',
+  templateUrl: './editviewevent.component.html',
+  styleUrls: ['./editviewevent.component.scss']
 })
-export class CreateeventComponent implements OnInit {
+export class EditViewEventComponent implements OnInit {
   public createMessage: string;
+  eventId: string ="";
+  salon: Salon;
   salonForm: FormGroup;
   sectionForm: FormGroup;
   sectionElements: SalonSection[];
   section: string="";
   status: string = "";
-  countries: Array<any> =  [{value : "1" , label: "Singapore"},
-                            {value : "2" , label: "Europe"},
-                            {value : "3" , label: "Malaysia"},
-                            {value : "4" , label: "Germany"}];
+  isAdmin = false;
+  countries: Array<any> =  [{value : "1" , label: "Singapore" , selected: false},
+                            {value : "2" , label: "Europe", selected: false},
+                            {value : "3" , label: "Malaysia", selected: false},
+                            {value : "4" , label: "Germany", selected: false}];
   constructor(private http: HttpClient, private formBuilder:FormBuilder, private route: ActivatedRoute, private common: CommonService ) { 
-    this.route.params.subscribe( params => console.log(params) );
+    let that = this;
+    this.route.params.subscribe( params => {
+      that.eventId = params.id;
+    });
   }
   
   ngOnInit() {
-
+    if(this.common.$shared.$user && ( this.common.$shared.$user.$role === "ADMIN" || this.common.$shared.$user.$role === "SUPERADMIN")) {
+      this.isAdmin = true;
+    }
     const sectionGroup: FormGroup = this.formBuilder.group({
                                                           name: 'COLOR',
                                                           enabled: true,
@@ -49,11 +59,40 @@ export class CreateeventComponent implements OnInit {
       section: ""
 
     });
+    let that = this;
+    const filter: FilterModel = new FilterModel();
+    if( this.eventId !== "" ) { 
+      filter.$where({salonId : this.eventId});
+    }
+    
+    let header = APIConstants.HTTP_HEADERS;
+    this.http.get(APIConstants.API_ENDPOINT+`salons`,
+                   { "headers":  header ,
+                   "params" : { "filter" :  JSON.stringify(filter) }}).subscribe((result: Salon)=>{ 
+                      that.salon = result[0];
+                      that.salonForm.get("name").setValue(that.salon.name);
+                      that.salonForm.get("link").setValue(that.salon.link);
+                      that.countries.forEach((countr) => { if( countr.label === that.salon.country ) countr.selected = true; });
+                      that.salonForm.get("country").markAsTouched();
+                      that.salonForm.get("patronage").setValue(that.salon.patronage);
+                      that.salonForm.get("transactionId").setValue(that.salon.transactionId);
+                      that.salonForm.get("paypalId").setValue(that.salon.paypalId);
+                      that.salonForm.get("notes").setValue(that.salon.notes);
+                      that.salonForm.get("closingDate").setValue(that.salon.closingDate);
+                      (<any[]>(that.salon["sections"])).forEach( (section) => {
+                        const sections = this.salonForm.get("sections") as FormArray;
+                        sections.push(this.formBuilder.group(section));
+                        
+                      })
+                      
+                   });
 
 
   }
   public saveSalon() {
     let salon = Object.assign({}, this.salonForm.value);
+    salon.salonId = this.salon.salonId;
+    salon.club = this.salon.club;
     delete salon["section"];
     const tempD = salon.closingDate;
     salon.closingDate = tempD+"T23:59:59.000Z";
@@ -62,19 +101,19 @@ export class CreateeventComponent implements OnInit {
         salon.country = countr.label;
       }
     });
-    salon["salonId"] = 0;
+    
     let header = APIConstants.HTTP_HEADERS;
         if( this.common.authToken ) {
             header["X-Auth-Token"] = this.common.authToken;
         }
-    this.http.post(APIConstants.API_ENDPOINT+"salons",
+    
+    this.http.put(APIConstants.API_ENDPOINT+`salons/${this.salon._id}`,
                                       salon, { "headers":  APIConstants.HTTP_HEADERS  }
                                     ).subscribe((re : any)=>{
                                       if(re && re._id){
                                         this.status = "success";
-                                        this.createMessage = " Salon created successfully";
+                                        this.createMessage = " Salon updated successfully";
                                         this.salonForm.reset();
-                                        (this.salonForm.get("sections") as FormArray).reset();
                                       }
                                     },(error) => {
                                       console.log("error");
