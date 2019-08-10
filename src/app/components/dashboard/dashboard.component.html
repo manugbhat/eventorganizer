@@ -1,4 +1,5 @@
 <h4>{{isAdmin? 'Admin' : 'Member'}} Dashboard</h4>
+<ngx-spinner></ngx-spinner>
 <div class="card">
 
   <h5 class="card-header info-color white-text text-center py-4">
@@ -41,6 +42,7 @@
           </th>
          
           <td>{{salon.closingDate}}</td>
+          
           <td *ngIf="isAdmin">
             <button mdbBtn color="primary" outline="true" size="sm" mdbWavesEffect type="button" class="m-0" (click)="manageEvent(salon._id)">Manage</button>
           </td>
@@ -61,10 +63,17 @@
           <td *ngIf="!isAdmin && salon.state === 'REJECTED'">
               <i class="far fa-thumbs-down red-text"></i>
           </td>
+          <td *ngIf="salon.comments">
+            <mdb-icon fas icon="comments" data-toggle="modal" data-target="#modalComments" (click)="loadComments(salon)"></mdb-icon>
+          </td>
+          <td *ngIf="!isAdmin && salon.state === 'COMPLETED'">
+            <button mdbBtn color="primary" outline="true" size="sm" mdbWavesEffect type="button" class="m-0" data-toggle="modal" data-target="#modalResult" (click)="setCurrent(salon)">Update Results</button>
+          </td>
           
         </tr>
        
       </tbody>
+    </table>
       <div class="modal fade" id="modalPayment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
           aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -88,6 +97,71 @@
         </div>
       </div>
     </div>
+    <div class="modal fade" id="modalResult" tabindex="0" role="dialog" aria-labelledby="myModalLabel1"
+          aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header text-center">
+            <h4 class="modal-title w-100 font-weight-bold">{{modalTitle}}</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div *ngIf="resultsToggle" class="results-page">
+              <div class="row">
+                <div class="col" mdbWavesEffect (click)="updateResult('WINNER')">
+                    <i class="fas fa-trophy prefix red-text" ></i>
+                    <input  id="winner" hidden>
+                    <label class="p-3" data-error="wrong" data-success="right" for="winner">WINNER!</label>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col" mdbWavesEffect (click)="updateResult('RUNNERUP')">
+              
+                  <mdb-icon id="runner-up" fas icon="award" ></mdb-icon>
+                  <input  id="runner-up" hidden>
+                  <label class="p-3" data-error="wrong" data-success="right" for="runner-up">2nd Prize</label>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="commentsToggle" class="comments-page w-100">
+                <mat-form-field>
+                    <textarea matInput [(ngModel)]="comment" placeholder="Leave a feedback about the Salon"></textarea>
+                </mat-form-field>
+                <mat-raised-button (click)="postComment()">Post</mat-raised-button>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="modalComments" tabindex="1" role="dialog" aria-labelledby="myModalLabel1"
+          aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header text-center">
+            <h4 class="modal-title w-100 font-weight-bold">Feedback/Comments</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row" *ngFor="let commentO of salonComments">
+              <div class="col-md-2">
+                <span class="small">{{commentO.user}}</span>
+              </div>
+              <div class="col-md-10">
+                {{commentO.comment}}
+              </div>
+            </div>
+            
+          </div>
+          
+        </div>
+      </div>
+    </div>
     
-    </table>
+    
 </div>

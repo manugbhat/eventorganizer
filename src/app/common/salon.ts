@@ -14,6 +14,7 @@ export class Salon {
     public notes: string[] = [""];
    // public sections: any[] = [{}];
     public section: string = "";
+    public status: string = "";
 
 	/* constructor($name:string, $link: string, $country: string, $patronage: string[], $sections: any[], $transactionId?: string, $paypalId?: string, $date? : string) {
         this.name = $name;

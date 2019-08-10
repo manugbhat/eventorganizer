@@ -1,8 +1,10 @@
 <h4>Manage {{(salon && salon.name) ? salon.name : ''}} Salon</h4>
+<ngx-spinner></ngx-spinner>
 <div *ngIf="isAdmin" class="d-flex flex-row">
   <button class="btn btn-outline-info  btn-block z-depth-0 my-4 waves-effect"
   type="submit" (click)="publish()">Publish</button>
   <button class="btn btn-outline-info  ml-4 btn-block z-depth-0 my-4 waves-effect" (click)="showMembers()">Show Members</button>
+  <button class="btn btn-outline-info  ml-4 btn-block z-depth-0 my-4 waves-effect" (click)="completeSalon()">Complete Salon</button>
 </div>
 <div class="alert alert-danger text-center py-1" role="alert" *ngIf="message && message.status === 'ERROR'">
   {{message.msg}}

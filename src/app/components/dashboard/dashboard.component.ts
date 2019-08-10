@@ -6,6 +6,8 @@ import { APIConstants } from 'src/app/constants/api-constants';
 import { FilterModel } from 'src/app/constants/api-filter.model';
 import { Salon } from 'src/app/common/salon';
 import { CommonService } from 'src/app/common/common-service.service';
+import * as _ from 'lodash';
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: 'app-dashboard',
@@ -18,9 +20,16 @@ export class DashboardComponent implements OnInit {
   isAdmin: boolean= false;
   currentSalon: Salon;
   paymentId: string;
-  constructor(private router: Router, private http: HttpClient, private formBuilder:FormBuilder, private common: CommonService) { }
+  resultsToggle: boolean= true;
+  commentsToggle: boolean;
+  modalTitle: string;
+  comment: string;
+  salonComments: any[];
+  constructor(private router: Router, private http: HttpClient, private formBuilder:FormBuilder, 
+    private common: CommonService, private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
+    this.spinner.show();
     this.searchForm = this.formBuilder.group({
       salonName:[""],
       closingDate: [""]
@@ -73,32 +82,43 @@ export class DashboardComponent implements OnInit {
                           if(salon["salonName"]) {
                             salon.name = salon["salonName"];
                           }
+                          if(salon["prop"] && salon["prop"][0]["status"]) {
+                            salon["state"] = salon["prop"][0]["status"];
+                          }
+                          
                         });
                         this.searchResult = result;
+                        this.spinner.hide();
                       });
   }
   public manageEvent(id: string){
     this.router.navigate([`/manageevent/${id}`]);
   }
 
-  public update(salon: Salon, action: string){
+  public update(salon: Salon, action: string, value? : string){
+    this.spinner.show();
     switch(action) {
       case "INTERESTED" : salon["state"] = "INTERESTED";
                           break;
       case "PAID" : salon["state"] = "PAID";
                           break;
+      case "RESULT" : salon["result"] = value;
+                      break;
+      case "COMMENTS" : salon["comments"] = this.comment;
+                        break;
       default : break;
     }
-    const salonId = salon._id;
-    delete salon.closingDate;
-    delete salon.name;
-    delete salon._id;
+    let salonCopy  = _.cloneDeep(salon);
+    const salonId = salonCopy._id;
+    delete salonCopy.closingDate;
+    delete salonCopy.name;
+    delete salonCopy._id;
     const API : string  = (this.isAdmin) ? "salons/" : "user-salons/";
     let header = APIConstants.HTTP_HEADERS;
     if( this.common.authToken ) {
       header["X-Auth-Token"] = this.common.authToken;
     }
-    this.http.patch(APIConstants.API_ENDPOINT+API+salonId , salon, {"headers":  header}).subscribe((result: any) => {
+    this.http.patch(APIConstants.API_ENDPOINT+API+salonId , salonCopy, {"headers":  header}).subscribe((result: any) => {
       this.load( new FilterModel());
     });
   }
@@ -108,10 +128,31 @@ export class DashboardComponent implements OnInit {
 
   public setCurrent(cur ) {
     this.currentSalon = cur;
+    this.modalTitle = "Update your result";
   }
   public updatePayment(){
     this.currentSalon.transactionId = this.paymentId;
     this.update(this.currentSalon, "PAID");
 
+  }
+
+  public updateResult(result: string){
+    this.commentsToggle = true;
+    this.modalTitle = "Give feedback";
+    this.update(this.currentSalon,"RESULT", result);
+    this.resultsToggle = false;
+
+  }
+  loadComments(salon: Salon) {
+    this.spinner.show();
+    let header = APIConstants.HTTP_HEADERS;
+    this.http.get<any[]>(APIConstants.API_ENDPOINT+`salon-comments/${salon.salonId}`,{'headers' : header})
+    .subscribe((result: any[])=>{
+      this.salonComments = result;
+      this.spinner.hide();
+    }); 
+  }
+  postComment(){
+    this.update(this.currentSalon,"COMMENTS");
   }
 }

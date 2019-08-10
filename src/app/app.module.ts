@@ -25,6 +25,7 @@ import { ResultsComponent } from './components/results/results.component';
 import { SigninComponent } from './components/signin/signin.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { MaterialModule } from './material/material.module';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { MaterialModule } from './material/material.module';
     MaterialModule,
     MDBBootstrapModule.forRoot(),
     NgMaterialModule,
+    NgxSpinnerModule,
     ReactiveFormsModule,
     HttpClientModule
   ],

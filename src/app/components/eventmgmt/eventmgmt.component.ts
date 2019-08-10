@@ -7,6 +7,8 @@ import { Salon } from 'src/app/common/salon';
 import { User } from 'src/app/common/user.model';
 import { APIConstants } from 'src/app/constants/api-constants';
 import { FilterModel } from 'src/app/constants/api-filter.model';
+import { headersToString } from 'selenium-webdriver/http';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-eventmgmt',
@@ -23,7 +25,7 @@ export class EventmgmtComponent implements OnInit {
   currentMember: User;
   salon: Salon ;
   message: {msg: string, status: string} = { msg : '' , status : ''};
-  constructor(private http: HttpClient, private route: ActivatedRoute, private common: CommonService) {
+  constructor(private http: HttpClient, private route: ActivatedRoute, private common: CommonService, private spinner: NgxSpinnerService) {
     let that = this;
     this.route.params.subscribe( params => {
       that.eventId = params.id;
@@ -31,11 +33,13 @@ export class EventmgmtComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.spinner.show();
     if(this.common.$shared.$user && ( this.common.$shared.$user.$role === "ADMIN" || this.common.$shared.$user.$role === "SUPERADMIN")) {
       this.isAdmin = true;
     }
     let header = APIConstants.HTTP_HEADERS;
     let that = this;
+    
     this.http.get(APIConstants.API_ENDPOINT+`salons/${this.eventId}`,
                    { "headers":  header }).subscribe((result: Salon)=>{ 
                       that.salon = result;
@@ -83,12 +87,13 @@ export class EventmgmtComponent implements OnInit {
                       that.selectedMembers = _.filter(that.members, (member) => {
                         return member.checked;
                       })
-                      
+                      this.spinner.hide();
                     });
   
   }
   
   public publish(): void {
+    this.spinner.show();
     let sMemberUIds: string[] = _.map(this.selectedMembers, (u : User) => {
       return u["userId"];
     });
@@ -104,10 +109,12 @@ export class EventmgmtComponent implements OnInit {
                               that.message.msg = `Published successfully to ${result.length} members`;
                               that.message.status = "SUCCESS";
                             }
+                            this.spinner.hide();
                         },
                         (error: any) => {
                               that.message.msg = `Something went wrong`;
                               that.message.status = "ERROR";
+                              this.spinner.hide();
                         });
   }
 
@@ -139,6 +146,16 @@ export class EventmgmtComponent implements OnInit {
                                                             { "headers":  header, 
                                                               //"params" : { "filter" :  JSON.stringify(filter) }
                                                               }).subscribe((result: any)=>{ console.log(result); });
+
+  }
+
+  public completeSalon(){
+    this.salon.status = "COMPLETED";
+    const salonReq: Salon = _.cloneDeep(this.salon);
+    delete salonReq["admin"];
+    this.http.patch(APIConstants.API_ENDPOINT+`salons/${salonReq._id}`, salonReq, 
+                                                          { "headers": APIConstants.HTTP_HEADERS,
+                                                        }).subscribe((result: any) => { console.log(result);});
 
   }
 
