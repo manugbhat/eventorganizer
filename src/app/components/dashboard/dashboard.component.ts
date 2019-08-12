@@ -85,6 +85,9 @@ export class DashboardComponent implements OnInit {
                           if(salon["prop"] && salon["prop"][0]["status"]) {
                             salon["state"] = salon["prop"][0]["status"];
                           }
+                          if(salon["prop"] && salon["prop"][0]["comments"]) {
+                            salon["comments"] = salon["prop"][0]["comments"];
+                          }
                           
                         });
                         this.searchResult = result;

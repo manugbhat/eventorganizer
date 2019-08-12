@@ -155,7 +155,12 @@ export class EventmgmtComponent implements OnInit {
     delete salonReq["admin"];
     this.http.patch(APIConstants.API_ENDPOINT+`salons/${salonReq._id}`, salonReq, 
                                                           { "headers": APIConstants.HTTP_HEADERS,
-                                                        }).subscribe((result: any) => { console.log(result);});
+                                                        }).subscribe((result: any) => { 
+                                                          if(result) {
+                                                            this.message.msg = `Salon completed !`;
+                                                            this.message.status = "SUCCESS";
+                                                          }
+                                                        });
 
   }
 

@@ -6,6 +6,7 @@ import { FormGroup, FormBuilder, FormArray, Validators, FormControl } from '@ang
 import { SalonSection } from 'src/app/common/salon-section.model';
 import { ActivatedRoute } from '@angular/router';
 import { CommonService } from 'src/app/common/common-service.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-createevent',
@@ -23,7 +24,8 @@ export class CreateeventComponent implements OnInit {
                             {value : "2" , label: "Europe"},
                             {value : "3" , label: "Malaysia"},
                             {value : "4" , label: "Germany"}];
-  constructor(private http: HttpClient, private formBuilder:FormBuilder, private route: ActivatedRoute, private common: CommonService ) { 
+  constructor(private http: HttpClient, private formBuilder:FormBuilder, private route: ActivatedRoute, 
+    private common: CommonService, private spinner: NgxSpinnerService ) { 
     this.route.params.subscribe( params => console.log(params) );
   }
   
@@ -53,6 +55,7 @@ export class CreateeventComponent implements OnInit {
 
   }
   public saveSalon() {
+    this.spinner.show();
     let salon = Object.assign({}, this.salonForm.value);
     delete salon["section"];
     const tempD = salon.closingDate;
@@ -75,11 +78,13 @@ export class CreateeventComponent implements OnInit {
                                         this.createMessage = " Salon created successfully";
                                         this.salonForm.reset();
                                         (this.salonForm.get("sections") as FormArray).reset();
+                                        this.spinner.hide();
                                       }
                                     },(error) => {
                                       console.log("error");
                                       this.status = "failure";
                                       this.createMessage = "Some problem creating Salon!";
+                                      this.spinner.hide();
                                     });
     
   } 
