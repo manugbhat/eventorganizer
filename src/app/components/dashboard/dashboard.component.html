@@ -47,16 +47,17 @@
             <button mdbBtn color="primary" outline="true" size="sm" mdbWavesEffect type="button" class="m-0" (click)="manageEvent(salon._id)">Manage</button>
           </td>
           <td *ngIf="!isAdmin && salon.state === 'RECDINV'">
-            <button mdbBtn color="primary" outline="true" size="sm" mdbWavesEffect type="button" class="m-0" (click)="update(salon, 'INTERESTED')">Show Interest</button>
+            <button mdbBtn color="primary" outline="true" size="sm" mdbWavesEffect type="button" class="m-0" (click)="openShowInterest(salon)">Show Interest</button>
+          </td>
+          <td *ngIf="!isAdmin && salon.state === 'PAID'">
+            <i class="far fa-money-bill-alt green-text"></i>
+            <button mdbBtn color="primary" outline="true" size="sm" mdbWavesEffect type="button" class="m-0" (click)="openShortlist(salon)">Update Shortlist</button>
           </td>
           <td *ngIf="!isAdmin && salon.state === 'INTERESTED'">
               <i class="fas fa-check green-text"></i>
-              <button mdbBtn color="primary" outline="true" size="sm" mdbWavesEffect type="button" class="m-0" data-toggle="modal" data-target="#modalPayment" (click)="setCurrent(salon)">Update Payment</button>
+              <button mdbBtn color="primary" outline="true" size="sm" mdbWavesEffect type="button" class="m-0" (click)="openPaymentModal(salon)">Update Payment</button>
           </td>
-          <td *ngIf="!isAdmin && salon.state === 'PAID'">
-              <i class="far fa-money-bill-alt green-text"></i>
-
-          </td>
+          
           <td *ngIf="!isAdmin && salon.state === 'SHORTLISTED'">
               <i class="far fa-thumbs-up green-text"></i>
           </td>
@@ -67,14 +68,14 @@
             <mdb-icon fas icon="comments" data-toggle="modal" data-target="#modalComments" (click)="loadComments(salon)"></mdb-icon>
           </td>
           <td *ngIf="!isAdmin && salon.state === 'COMPLETED'">
-            <button mdbBtn color="primary" outline="true" size="sm" mdbWavesEffect type="button" class="m-0" data-toggle="modal" data-target="#modalResult" (click)="setCurrent(salon)">Update Results</button>
+            <button mdbBtn color="primary" outline="true" size="sm" mdbWavesEffect type="button" class="m-0" (click)="openResults(salon)">Update Results</button>
           </td>
           
         </tr>
        
       </tbody>
     </table>
-      <div class="modal fade" id="modalPayment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+      <div mdbModal #paymentModal="mdbModal" class="modal fade" id="modalPayment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
           aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -97,34 +98,39 @@
         </div>
       </div>
     </div>
-    <div class="modal fade" id="modalResult" tabindex="0" role="dialog" aria-labelledby="myModalLabel1"
+    <div mdbModal #resultsModal="mdbModal" class="modal fade" id="modalResult" tabindex="0" role="dialog" aria-labelledby="myModalLabel1"
           aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header text-center">
             <h4 class="modal-title w-100 font-weight-bold">{{modalTitle}}</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resultsModal.hide()">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
             <div *ngIf="resultsToggle" class="results-page">
-              <div class="row">
-                <div class="col" mdbWavesEffect (click)="updateResult('WINNER')">
-                    <i class="fas fa-trophy prefix red-text" ></i>
-                    <input  id="winner" hidden>
-                    <label class="p-3" data-error="wrong" data-success="right" for="winner">WINNER!</label>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col" mdbWavesEffect (click)="updateResult('RUNNERUP')">
-              
-                  <mdb-icon id="runner-up" fas icon="award" ></mdb-icon>
-                  <input  id="runner-up" hidden>
-                  <label class="p-3" data-error="wrong" data-success="right" for="runner-up">2nd Prize</label>
-                </div>
-              </div>
+                  <div class="row">
+                    <div class="col">Section</div>
+                    <div class="col">Result</div>
+                  </div>
+                  <form [formGroup]="resultForm" (ngSubmit)="updateResult()" class="md-form needs-validation" style="color: #757575;">
+                    <div formArrayName="sections" class="list-group" *ngFor="let section of rSections.controls; let i = index;">
+                    
+                      <div [formGroupName]="i" class="d-flex flex-row">
+                        <div class="col ml-2 mt-2">
+      
+                          <input type="text" class="form-control" formControlName="name"/>          
+                        </div>
+                        <div class="col mb-5">
+                          <input type="text" class="form-control" formControlName="result" mdbInput/>
+                        </div>
+                        
+                      </div>
+                    </div>
+                    <button class="btn btn-outline-info btn-rounded btn-block z-depth-0 my-4 waves-effect" 
+                        type="submit">Update Result</button>
+                  </form>
             </div>
             <div *ngIf="commentsToggle" class="comments-page w-100">
                 <mat-form-field>
@@ -162,6 +168,90 @@
         </div>
       </div>
     </div>
-    
-    
+    <div mdbModal #interestsModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1"
+          aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header text-center">
+            <h4 class="modal-title w-100 font-weight-bold">Show Interest</h4>
+            <button type="button" class="close" aria-label="Close" (click)="interestsModal.hide()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body mx-3">
+            <div class="row">
+              <div class="col">Section</div>
+              <div class="col">Price</div>
+              <div class="col">Discount</div>
+            </div>
+            <form [formGroup]="sectionForm" (ngSubmit)="updateInterests()" class="md-form needs-validation" style="color: #757575;">
+              <div class="list-group" *ngFor="let section of sections.controls; let i = index;">
+              
+                <div class="d-flex flex-row">
+                  <div class="col ml-2 mt-2">
+                    <input type="checkbox" class="form-control custom-control-input" id="enabled-{{i}}" [formControl]="section" mdbInput>
+
+                    <label class="custom-control-label" for="enabled-{{i}}">{{currentSalon["interests"][i].name}}</label>
+                  </div>
+                  <div class="col mb-5">{{currentSalon["interests"][i].price}}</div>
+                  <div class="col mb-5">
+                    {{currentSalon["interests"][i].discount}}
+                  </div>
+                </div>
+              </div>
+              <button class="btn btn-outline-info btn-rounded btn-block z-depth-0 my-4 waves-effect" 
+                  type="submit">Show Interest</button>
+            </form>
+          </div>
+          <div class="modal-footer d-flex justify-content-center">
+            <!-- <button class="btn btn-default" (click)="updatePayment()">Update</button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div mdbModal #shortlistModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header text-center">
+            <h4 class="modal-title w-100 font-weight-bold">Shortlist</h4>
+            <button type="button" class="close" aria-label="Close" (click)="shortlistModal.hide()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body mx-3">
+            <div class="row">
+              <div class="col">Section</div>
+              <div class="col">Shortlist</div>
+            </div>
+            
+              <div class="list-group" *ngFor="let section of iSections; let i = index;">
+              
+                <div class="d-flex flex-row">
+                  <div class="col-4 mr-2">
+
+                    <label>{{section.name}}</label>
+                  </div>
+                  <div class="col-8 ml-2 mb-5"> 
+                    <!-- <mat-form-field> -->
+                      
+                      <select matNativeControl required [(ngModel)]="section.shortlist">
+                        <option label="--select something --"></option>
+                        <option value="1">Selected</option>
+                        <option value="0">Rejected</option>
+                      </select>
+                      
+                    <!-- </mat-form-field> -->
+                  </div>
+                
+                </div>
+              </div>
+              <button (click)="updateShortlists()" class="btn btn-outline-info btn-rounded btn-block z-depth-0 my-4 waves-effect" 
+                  type="submit">Shortlist</button>
+          </div>
+          <div class="modal-footer d-flex justify-content-center">
+          </div>
+        </div>
+      </div>
+</div>
 </div>

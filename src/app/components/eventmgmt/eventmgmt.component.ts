@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from "lodash";
 import { CommonService } from 'src/app/common/common-service.service';
@@ -9,6 +9,8 @@ import { APIConstants } from 'src/app/constants/api-constants';
 import { FilterModel } from 'src/app/constants/api-filter.model';
 import { headersToString } from 'selenium-webdriver/http';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
+import { ModalDirective } from 'angular-bootstrap-md';
 
 @Component({
   selector: 'app-eventmgmt',
@@ -25,11 +27,16 @@ export class EventmgmtComponent implements OnInit {
   currentMember: User;
   salon: Salon ;
   message: {msg: string, status: string} = { msg : '' , status : ''};
-  constructor(private http: HttpClient, private route: ActivatedRoute, private common: CommonService, private spinner: NgxSpinnerService) {
+  sectionForm: FormGroup;
+  sections: {name: string , shortlist: string}[] = [];
+  @ViewChild('shortlistModal') public shortlistModal: ModalDirective;
+  constructor(private http: HttpClient, private route: ActivatedRoute, private common: CommonService, private formBuilder:FormBuilder, private spinner: NgxSpinnerService) {
     let that = this;
     this.route.params.subscribe( params => {
       that.eventId = params.id;
     });
+    
+    
   }
 
   ngOnInit() {
@@ -92,6 +99,34 @@ export class EventmgmtComponent implements OnInit {
   
   }
   
+  public openShortlist(cur) {
+    this.setCurrent(cur);
+    let salonSections = (this.currentMember["interests"] as Array<any>);
+    // sections.removeAt(0);
+    if(!_.isEmpty(this.sections)) {
+      _.each(salonSections, (value, i) => {
+        this.sections[i].name = value;
+      });
+    } else {
+      let k = 0;
+      _.each(salonSections, (value, i) => {
+        
+        if(_.values(value)[0]) {
+          console.log("key " ,  _.keys(value)[0]);
+          this.sections[k] = { name: _.keys(value)[0],
+                               shortlist:''
+                             };
+                             k++;
+                             console.log("sec ", this.sections)
+        }
+        
+      });
+
+    }
+    
+    this.shortlistModal.show();
+  }
+
   public publish(): void {
     this.spinner.show();
     let sMemberUIds: string[] = _.map(this.selectedMembers, (u : User) => {
@@ -130,22 +165,33 @@ export class EventmgmtComponent implements OnInit {
     this.currentMember = m;
   }
 
-  public updateShortlist(){
-    this.currentMember["shortListed"] = (this.shortlist == "1") ?true: false;
+  public updateShortlists(){
+    
     let header = APIConstants.HTTP_HEADERS;
     let that = this;
-    this.currentMember["state"] = this.currentMember["shortListed"] ? "SHORTLISTED": "REJECTED";
+    if( this.common.authToken ) {
+      header["X-Auth-Token"] = this.common.authToken;
+    }
+    const filteredSections = _.filter(this.sections, (section)=>{
+                                return section.shortlist == "1";
+                              });
+    this.currentMember["shortLists"] = _.map(filteredSections, (section) => {
+                                            if(section.shortlist == "1") {
+                                              return {[section.name] : "SHORTLISTED"};
+                                            }
+                                          });
+    
+    this.currentMember["state"] = this.currentMember["shortLists"].length > 0 ? "SHORTLISTED": "REJECTED";
     const salonId = this.currentMember["_id"];
     delete this.currentMember["_id"];
     delete this.currentMember["shortListed"];
     delete this.currentMember["showShortlist"];
     delete this.currentMember["checked"];
-    /* const filter: FilterModel = new FilterModel();
-    filter.$where({userId : this.currentMember["userId"], salonId: this.currentMember["salonId"]}); */
+    
     this.http.patch(APIConstants.API_ENDPOINT+`user-salons/${salonId}`, this.currentMember,
                                                             { "headers":  header, 
                                                               //"params" : { "filter" :  JSON.stringify(filter) }
-                                                              }).subscribe((result: any)=>{ console.log(result); });
+                                                              }).subscribe((result: any)=>{ this.shortlistModal.hide(); });
 
   }
 
@@ -163,5 +209,6 @@ export class EventmgmtComponent implements OnInit {
                                                         });
 
   }
+  
 
 }

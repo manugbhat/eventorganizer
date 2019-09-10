@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { APIConstants } from 'src/app/constants/api-constants';
 import { FilterModel } from 'src/app/constants/api-filter.model';
+import { ModalDirective } from 'angular-bootstrap-md';
 import { Salon } from 'src/app/common/salon';
 import { CommonService } from 'src/app/common/common-service.service';
 import * as _ from 'lodash';
@@ -16,6 +17,9 @@ import { NgxSpinnerService } from "ngx-spinner";
 })
 export class DashboardComponent implements OnInit {
   searchForm: FormGroup;
+  sectionGroup: FormGroup;
+  sectionForm: FormGroup;
+  resultForm: FormGroup;
   searchResult: Salon[];
   isAdmin: boolean= false;
   currentSalon: Salon;
@@ -25,8 +29,20 @@ export class DashboardComponent implements OnInit {
   modalTitle: string;
   comment: string;
   salonComments: any[];
+  iSections: {name: string , shortlist: string}[] = [];
+  @ViewChild('interestsModal') public interestModal: ModalDirective;
+  @ViewChild('paymentModal') public paymentModal: ModalDirective;
+  @ViewChild('resultsModal') public resultsModal: ModalDirective;
+  @ViewChild('shortlistModal') public shortlistModal: ModalDirective;
   constructor(private router: Router, private http: HttpClient, private formBuilder:FormBuilder, 
-    private common: CommonService, private spinner: NgxSpinnerService) { }
+    private common: CommonService, private spinner: NgxSpinnerService) { 
+      this.sectionForm = this.formBuilder.group({ 
+        sections: this.formBuilder.array([])
+      });
+      this.resultForm = this.formBuilder.group({ 
+        sections: this.formBuilder.array([])
+      });
+    }
 
   ngOnInit() {
     this.spinner.show();
@@ -34,6 +50,13 @@ export class DashboardComponent implements OnInit {
       salonName:[""],
       closingDate: [""]
     });
+    this.sectionGroup = this.formBuilder.group({
+      name: 'COLOR',
+      enabled: true,
+      price: '',
+      discount: ''
+    });
+    
     if(this.common.$shared.$user && ( this.common.$shared.$user.$role === "ADMIN" || this.common.$shared.$user.$role === "SUPERADMIN")) {
       this.isAdmin = true;
     }
@@ -98,16 +121,36 @@ export class DashboardComponent implements OnInit {
     this.router.navigate([`/manageevent/${id}`]);
   }
 
-  public update(salon: Salon, action: string, value? : string){
+  public update(salon: Salon, action: string, value? : any){
     this.spinner.show();
     switch(action) {
       case "INTERESTED" : salon["state"] = "INTERESTED";
+                          salon["interests"] = value;
+                          delete salon["shortLists"];
+                          delete salon["results"];
+                          break;
+      case "SHORTLISTED" : if(salon["shortLists"] && salon["shortLists"].length > 0) {
+
+                            salon["state"] = "SHORTLISTED";
+                          } else {
+                            salon["state"] = "REJECTED";
+                          }
+                          delete salon["interests"];
+                          delete salon["results"];
                           break;
       case "PAID" : salon["state"] = "PAID";
+                    delete salon["shortLists"];
+                    delete salon["results"];
+                    delete salon["interests"]
                           break;
-      case "RESULT" : salon["result"] = value;
+      case "RESULT" : salon["results"] = value;
+                      delete salon["shortLists"];
+                      delete salon["interests"];
                       break;
       case "COMMENTS" : salon["comments"] = this.comment;
+                        delete salon["shortLists"];
+                        delete salon["results"];
+                        delete salon["interests"];
                         break;
       default : break;
     }
@@ -128,23 +171,115 @@ export class DashboardComponent implements OnInit {
   public salonDetails(id: string) {
     this.router.navigate([`/editviewevent/${id}`]);
   }
+  public openShowInterest(cur) {
+    this.setCurrent(cur);
+    let salonSections = (this.currentSalon["interests"] as Array<any>);
+    const sections = this.sectionForm.get("sections") as FormArray;
+    // sections.removeAt(0);
+    if(!_.isEmpty(sections.controls)) {
+      _.each(salonSections, (value, i) => {
+        sections.controls[i].setValue(value)
+      });
+    } else {
+      _.each(salonSections, (value, i) => {
+        console.log(value);
+        sections.push(new FormControl(true));
+      });
 
-  public setCurrent(cur ) {
+    }
+    this.interestModal.show();
+  }
+  public openShortlist(cur) {
+    this.setCurrent(cur);
+    let salonSections = (this.currentSalon["interests"] as Array<any>);
+    // sections.removeAt(0);
+    if(!_.isEmpty(this.iSections)) {
+      _.each(salonSections, (value, i) => {
+        this.iSections[i].name = value;
+      });
+    } else {
+      let k = 0;
+      _.each(salonSections, (value, i) => {
+        
+        if(_.values(value)[0]) {
+          console.log("key " ,  _.keys(value)[0]);
+          this.iSections[k] = { name: _.keys(value)[0],
+                               shortlist:''
+                             };
+                             k++;
+                             console.log("sec ", this.iSections)
+        }
+        
+      });
+
+    }
+    this.shortlistModal.show();
+  }
+  public openPaymentModal(cur) {
+    this.setCurrent(cur);
+    this.paymentModal.show();
+  }
+  public openResults(cur) {
+    this.setCurrent(cur);
+    let salonSections = (this.currentSalon["shortLists"] as Array<any>);
+    const sections = this.resultForm.get("sections") as FormArray;
+    // sections.removeAt(0);
+    if(!_.isEmpty(sections.controls)) {
+      _.each(salonSections, (value, i) => {
+        sections.controls[i].setValue(value)
+      });
+    } else {
+      _.each(salonSections, (value, i) => {
+        console.log(value);
+        sections.push(this.formBuilder.group( {
+          name: _.keys(value)[0],
+          result: ''
+        }));
+      });
+
+    }
+    this.resultsModal.show();
+  }
+  public setCurrent(cur, type? ) {
     this.currentSalon = cur;
     this.modalTitle = "Update your result";
   }
   public updatePayment(){
     this.currentSalon.transactionId = this.paymentId;
     this.update(this.currentSalon, "PAID");
-
+    this.paymentModal.hide();
   }
-
-  public updateResult(result: string){
+  public updateShortlists(){
+    const filteredSections = _.filter(this.iSections, (section)=>{
+      return section.shortlist == "1";
+    });
+    this.currentSalon["shortLists"] = _.map(filteredSections, (section) => {
+                                            if(section.shortlist == "1") {
+                                              return {[section.name] : "SHORTLISTED"};
+                                            }
+                                          });
+    this.update(this.currentSalon, "SHORTLISTED");
+    this.shortlistModal.hide();
+  }
+  public updateResult(){
     this.commentsToggle = true;
     this.modalTitle = "Give feedback";
-    this.update(this.currentSalon,"RESULT", result);
+    this.update(this.currentSalon,"RESULT", this.resultForm.get('sections').value);
     this.resultsToggle = false;
+    this.resultsModal.hide();
+  }
 
+  public updateInterests() {
+    const sections: FormArray = this.sectionForm.get("sections") as FormArray;
+    console.log(sections);
+    let salonSections = (this.currentSalon["interests"] as Array<any>);
+    const interestedSections: any[] = [];
+     _.each(salonSections, (salonS, i) => {
+        interestedSections.push({ [salonS.name] : sections.controls[i].value});
+    });
+    console.log("selct ", interestedSections);
+    this.update(this.currentSalon, "INTERESTED", interestedSections);
+    this.interestModal.hide();
   }
   loadComments(salon: Salon) {
     this.spinner.show();
@@ -157,5 +292,14 @@ export class DashboardComponent implements OnInit {
   }
   postComment(){
     this.update(this.currentSalon,"COMMENTS");
+  }
+  get sections() {
+    return <FormArray> this.sectionForm.get("sections");
+  } 
+  get rSections() {
+    return <FormArray> this.resultForm.get("sections");
+  }
+  getLabel(i) {
+    return _.keys(this.currentSalon["shortLists"][i])[0];
   }
 }

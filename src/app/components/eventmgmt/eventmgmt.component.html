@@ -30,14 +30,59 @@
             <mat-checkbox (change)="selectMember($event, i, member)" [color]="warn" [checked]="member.checked">{{member.name}}</mat-checkbox>
           </td>
           <td>{{member.status}}</td>
-          <td><button *ngIf="isAdmin && member.showShortlist" mdbBtn color="primary" outline="true" size="sm" mdbWavesEffect type="button" class="m-0" data-toggle="modal" data-target="#modalShortlist" (click)="setCurrent(member)">Update Shortlist</button></td>
+          <td><button *ngIf="isAdmin && member.showShortlist" mdbBtn color="primary" outline="true" size="sm" mdbWavesEffect type="button" class="m-0" (click)="openShortlist(member)">Update Shortlist</button></td>
           <td>{{member.transactionId}}</td>
         </tr>
       </ng-container>
     </tbody>
   
   </table>
-  <div class="modal fade" id="modalShortlist" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  <div mdbModal #shortlistModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1"
+          aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header text-center">
+            <h4 class="modal-title w-100 font-weight-bold">Shortlist</h4>
+            <button type="button" class="close" aria-label="Close" (click)="shortlistModal.hide()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body mx-3">
+            <div class="row">
+              <div class="col">Section</div>
+              <div class="col">Shortlist</div>
+            </div>
+            
+              <div class="list-group" *ngFor="let section of sections; let i = index;">
+              
+                <div class="d-flex flex-row">
+                  <div class="col-4 mr-2">
+
+                    <label>{{section.name}}</label>
+                  </div>
+                  <div class="col-8 ml-2 mb-5"> 
+                    <!-- <mat-form-field> -->
+                      
+                      <select matNativeControl required [(ngModel)]="section.shortlist">
+                        <option label="--select something --"></option>
+                        <option value="1">Selected</option>
+                        <option value="0">Rejected</option>
+                      </select>
+                      
+                    <!-- </mat-form-field> -->
+                  </div>
+                 
+                </div>
+              </div>
+              <button (click)="updateShortlists()" class="btn btn-outline-info btn-rounded btn-block z-depth-0 my-4 waves-effect" 
+                  type="submit">Shortlist</button>
+          </div>
+          <div class="modal-footer d-flex justify-content-center">
+          </div>
+        </div>
+      </div>
+    </div>
+  <!-- <div class="modal fade" id="modalShortlist" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
           aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -60,4 +105,4 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
