@@ -7,6 +7,7 @@ import { SalonSection } from 'src/app/common/salon-section.model';
 import { ActivatedRoute } from '@angular/router';
 import { CommonService } from 'src/app/common/common-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import * as _ from "lodash";
 
 @Component({
   selector: 'app-createevent',
@@ -20,6 +21,7 @@ export class CreateeventComponent implements OnInit {
   sectionElements: SalonSection[];
   section: string="";
   status: string = "";
+  clubs: string[];
   countries: Array<any> =  [{value : "1" , label: "Singapore"},
                             {value : "2" , label: "Europe"},
                             {value : "3" , label: "Malaysia"},
@@ -39,6 +41,7 @@ export class CreateeventComponent implements OnInit {
                                                         });
     
     this.salonForm = this.formBuilder.group({
+      club: ["", Validators.required],
       name:["", Validators.required],
       link: ["", Validators.required],
       country: ["", Validators.required],
@@ -51,7 +54,18 @@ export class CreateeventComponent implements OnInit {
       section: ""
 
     });
-
+    const header = APIConstants.HTTP_HEADERS;
+    if( this.common.authToken ) {
+      header["X-Auth-Token"] = this.common.authToken;
+    }
+    this.http.get<any[]>(APIConstants.API_ENDPOINT+"clubs", 
+        { "headers":  header
+        }
+       ).subscribe( (res:any[]) => {
+          this.clubs = _.filter(res, (club) => { return club?true: false;});
+          
+          // that.clubId = res[0]._id;
+       });
 
   }
   public saveSalon() {
@@ -66,6 +80,7 @@ export class CreateeventComponent implements OnInit {
       }
     });
     salon["salonId"] = 0;
+    salon["club"] = parseInt(salon["club"]);
     let header = APIConstants.HTTP_HEADERS;
         if( this.common.authToken ) {
             header["X-Auth-Token"] = this.common.authToken;

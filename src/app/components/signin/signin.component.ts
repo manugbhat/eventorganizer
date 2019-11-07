@@ -5,9 +5,11 @@ import { CommonService } from '../../common/common-service.service';
 import { CommonData } from '../../common/common-data.model';
 import { SideNavConstants } from '../../common/sidenav.constants';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { SwPush } from '@angular/service-worker';
 import { SignInService } from './signin.service';
 import { User } from 'src/app/common/user.model';
 import { CookieService } from 'ngx-cookie-service';
+import { NewsletterService } from 'src/app/services/newsletter.service';
 
 
 @Component({
@@ -22,12 +24,15 @@ export class SigninComponent implements OnInit {
   places;
   errorMessage: string;
   loggedIn: boolean = false;
+  readonly VAPID_PUBLIC_KEY="BHCKfY4XgOOnVCHVRUdCj8hont_FDaBZz-tydMsdgz9Wt1I373z6dJ_M_jo1kWTm7sfL-L_-xw-ewsycXJOUD1A";
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private commonSharedService: CommonService,
     private signInService: SignInService,
-    private cookieService: CookieService) {
+    private cookieService: CookieService,
+    private newsletterService: NewsletterService,
+    private swPush: SwPush,) {
     if(this.commonSharedService.authToken === "") {
       this.loginValidationForm = fb.group({
         email: [null, [Validators.required, Validators.email]],
@@ -82,6 +87,15 @@ export class SigninComponent implements OnInit {
           this.cookieService.set("UserName", user.$name);
           this.cookieService.set("UserRole", user.$role);
           this.commonSharedService.setToken(res.prop.token);
+          this.swPush.requestSubscription({
+            serverPublicKey: this.VAPID_PUBLIC_KEY
+          })
+          .then(sub => { 
+            const subbody = { "sub" : sub, "user" : this.commonSharedService.$shared.$user.$_id}
+            
+            this.newsletterService.addPushSubscriber(subbody).subscribe();
+          } )
+          .catch(err => console.error("Could not subscribe to notifications", err)); 
           if(user.$role === "ADMIN" && this.commonSharedService.$shared.firstLogin ) {
             this.commonSharedService.$shared.firstLogin = false;
             this.router.navigate(['/club']);

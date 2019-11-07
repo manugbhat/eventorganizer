@@ -26,6 +26,7 @@ import { SigninComponent } from './components/signin/signin.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { MaterialModule } from './material/material.module';
 import { NgxSpinnerModule } from "ngx-spinner";
+import { NewsletterService } from './services/newsletter.service';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { NgxSpinnerModule } from "ngx-spinner";
   },
     HttpClientModule,
     CommonService,
-    CookieService ],
+    CookieService,
+    NewsletterService ],
   bootstrap: [AppComponent],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,

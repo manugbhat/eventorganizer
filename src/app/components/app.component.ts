@@ -1,18 +1,31 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Component } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CommonService } from '../common/common-service.service';
 import { CommonData } from '../common/common-data.model';
 import { CookieService } from 'ngx-cookie-service';
 import { User } from '../common/user.model';
+import { SwPush } from '@angular/service-worker';
+import { NewsletterService } from '../services/newsletter.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
+  readonly VAPID_PUBLIC_KEY="BLnVk1MBGFBW4UxL44fuoM2xxQ4o9CuxocVzKn9UVmnXZEyPCTEFjI4sALMB8qN5ee67yZ6MeQWjd5iyS8lINAg";
+  ngAfterViewInit(): void {
+    /* this.swPush.requestSubscription({
+      serverPublicKey: this.VAPID_PUBLIC_KEY
+    })
+    .then(sub => { 
+      sub["user"] = "";
+      this.newsletterService.addPushSubscriber(sub).subscribe();
+    } )
+    .catch(err => console.error("Could not subscribe to notifications", err));  */
+  }
 
   title = 'Event manager';
   mobileQuery: MediaQueryList;
@@ -21,7 +34,12 @@ export class AppComponent {
   role: string = "";
   isAdmin: boolean = false;
   userName: string ="";
-  constructor( private breakpointObserver: BreakpointObserver, private commonService: CommonService, private cookieService: CookieService) {
+  
+  constructor( private breakpointObserver: BreakpointObserver, 
+    private commonService: CommonService, 
+    private cookieService: CookieService,
+    private swPush: SwPush,    
+    private newsletterService: NewsletterService,) {
     this.fillerNav = this.commonService.$sideNav;
     const userName = this.cookieService.get("UserName");
     this.userName = userName;
@@ -58,6 +76,7 @@ export class AppComponent {
     });
     
   }
+  
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     map(result => result.matches)

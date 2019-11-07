@@ -9,6 +9,18 @@
 
     <!-- Form -->
     <form [formGroup]="salonForm" (ngSubmit)="saveSalon()" class="md-form needs-validation" style="color: #757575;">
+      <div class="d-flex flex-row">
+        <div class="col-2">
+          <label for="selectClub">Club</label>
+        </div>
+        <div class="col">
+          <select formControlName="club" class="browser-default custom-select md-form mb-4 initialized" id="selectClub" mdbValidate>
+           <ng-container *ngFor="let club of clubs">
+             <option value="{{club.clubId}}">{{club.name}}</option>
+           </ng-container>
+          </select>
+        </div>
+      </div>
       <div class="row">
         <div class="col-2">
           <label for="materialSubscriptionFormPasswords">Name</label>
