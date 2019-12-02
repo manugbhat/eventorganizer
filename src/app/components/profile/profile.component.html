@@ -1,0 +1,77 @@
+<div class="card">
+    <div class="card-header"><h5> User Profile</h5></div>
+    <div class="card-body">
+            <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="md-form needs-validation">
+                    <div class="row">
+                        <div class="col-2">
+                            <label for="name">Name</label>
+                        </div>
+                        <div class="col-8">
+                            <input formControlName="name" type="text" class="form-control" mdbInput/>
+                        </div>
+                    </div>
+                    <div class="row">
+                            <div class="col-2">
+                                <label for="age">Age</label>
+                            </div>
+                            <div class="col-8">
+                                <input formControlName="age" type="text" class="form-control" mdbInput/>
+                            </div>
+                    </div>
+                    <div class="row">
+                            <div class="col-2">
+                                <label for="dob">DOB</label>
+                            </div>
+                            <div class="col-8">
+                                <input formControlName="dob" type="date" class="form-control" mdbInput/>
+                            </div>
+                    </div>
+                    <!-- <div class="row">
+                            <div class="col-2">
+                                <label for="email">Email</label>
+                            </div>
+                            <div class="col-8">
+                                <input formControlName="email" type="text" class="form-control" mdbInput mdbValidate/>
+                            </div>
+                    </div> -->
+                    <div class="row">
+                            <div class="col-2">
+                                <label for="city">City</label>
+                            </div>
+                            <div class="col-8">
+                                <input formControlName="city" type="text" class="form-control" mdbInput />
+                            </div>
+                    </div>
+                    <div class="row">
+                            <div class="col-2">
+                                <label for="phone">Phone</label>
+                            </div>
+                            <div class="col-8">
+                                <input formControlName="phone" type="text" class="form-control" mdbInput/>
+                            </div>
+                    </div>
+                    <div class="row">
+                            <div class="col-4">
+                                <label for="interests">Interests</label>
+                            </div>
+                            <div class="col-8">
+                                <input formControlName="interests" type="text" class="form-control" mdbInput/>
+                            </div>
+                    </div>
+                    <div class="row">
+                            <div class="col-4">
+                                <label for="distinctions">Distinctions</label>
+                            </div>
+                            <div class="col-8">
+                                <input formControlName="distinctions" type="text" class="form-control" mdbInput/>
+                            </div>
+                    </div>
+                    <button class="btn btn-outline-info btn-rounded btn-block z-depth-0 my-4 waves-effect" 
+                            type="submit" >Update</button>
+                </form>
+        <p *ngIf="status === 'success'" class="note note-success">{{createMessage}}</p>
+        <p *ngIf="status === 'failure'" class="note note-danger">{{createMessage}}</p>
+    </div>
+</div>
+        
+    

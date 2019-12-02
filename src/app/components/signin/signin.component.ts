@@ -86,6 +86,7 @@ export class SigninComponent implements OnInit {
           this.cookieService.set("UserAuthToken", res.prop.token);
           this.cookieService.set("UserName", user.$name);
           this.cookieService.set("UserRole", user.$role);
+          this.cookieService.set("UserId", user.$_id);
           this.commonSharedService.setToken(res.prop.token);
           this.swPush.requestSubscription({
             serverPublicKey: this.VAPID_PUBLIC_KEY

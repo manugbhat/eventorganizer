@@ -10,6 +10,7 @@ import { InviteComponent } from './components/invite/invite.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { SigninComponent } from './components/signin/signin.component';
 import { SignupComponent } from './components/signup/signup.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 
 const routes: Routes = [
@@ -24,7 +25,8 @@ const routes: Routes = [
   { path: 'signin', component: SigninComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'manageevent/:id', component: EventmgmtComponent },
-  { path: 'editviewevent/:id', component: EditViewEventComponent }];
+  { path: 'editviewevent/:id', component: EditViewEventComponent },
+  { path: 'profile', component: ProfileComponent}];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

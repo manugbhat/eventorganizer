@@ -56,7 +56,7 @@ export class DashboardComponent implements OnInit {
       price: '',
       discount: ''
     });
-    
+    console.log(this.common.$shared);
     if(this.common.$shared.$user && ( this.common.$shared.$user.$role === "ADMIN" || this.common.$shared.$user.$role === "SUPERADMIN")) {
       this.isAdmin = true;
     }

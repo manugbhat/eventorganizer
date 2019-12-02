@@ -1,35 +1,36 @@
 
-<nav class="navbar navbar-expand-lg navbar-dark primary-color">
+<mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark primary-color">
     <span class="navbar-brand">
         <strong>Exhibition Event Management</strong>
     </span>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#emNavbar" aria-controls="emNavbar" aria-expanded="false" aria-label="Toggle navigation">
+    <button #collapser class="navbar-toggler" type="button" data-toggle="collapse" data-target="#emNavbar" aria-controls="emNavbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="emNavbar">
+    <div #collapsemenu class="collapse navbar-collapse" id="emNavbar">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
                 <a class="nav-link" routerLink="">Home</a>
             </li>
             
             <li class="nav-item" *ngIf="signedIn"><a class="nav-link" routerLink="/dashboard">Dashboard</a></li>
+            <li class="nav-item" *ngIf="signedIn"><a class="nav-link" routerLink="/profile">Profile</a></li>
             <li class="nav-item" *ngIf="signedIn && isAdmin"><a class="nav-link" routerLink="/invite">Invite</a></li>
             <li class="nav-item" *ngIf="signedIn && isAdmin"><a class="nav-link" routerLink="/club">Clubs</a></li>
             <li class="nav-item" *ngIf="signedIn && isAdmin"><a class="nav-link" routerLink="/salon">Salon</a></li>
         </ul>
         <ul class="navbar-nav ml-auto">
             
-            <li class="nav-item" *ngIf="signedIn">
-                <a class="nav-link dropdown-toggle" id="navbarProfileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <li class="nav-item dropdown" *ngIf="signedIn" dropdown>
+                <a class="nav-link dropdown-toggle" id="navbarProfileDropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-user"></i> {{userName}}
                 </a>
-                <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarProfileDropdown">
-                    <a class="dropdown-item" href="#">My account</a>
+                <div class="dropdown-menu-right dropdown dropdown-info" aria-labelledby="navbarProfileDropdown" role="menu">
+                    
                     <a class="dropdown-item" href="#" routerLink="/logout">Log out</a>
                 </div>
             </li>
         </ul>
     </div>
     
-</nav>
+</mdb-navbar>
 <router-outlet></router-outlet>

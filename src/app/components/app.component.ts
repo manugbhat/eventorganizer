@@ -1,5 +1,5 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CommonService } from '../common/common-service.service';
@@ -8,6 +8,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { User } from '../common/user.model';
 import { SwPush } from '@angular/service-worker';
 import { NewsletterService } from '../services/newsletter.service';
+import { Router, NavigationStart } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -34,22 +35,30 @@ export class AppComponent implements AfterViewInit {
   role: string = "";
   isAdmin: boolean = false;
   userName: string ="";
+  @ViewChild("collapser")
+  collapse: ElementRef ;
+  @ViewChild("collapsemenu")
+  collapseMenu: ElementRef;
+
   
   constructor( private breakpointObserver: BreakpointObserver, 
     private commonService: CommonService, 
     private cookieService: CookieService,
     private swPush: SwPush,    
-    private newsletterService: NewsletterService,) {
+    private newsletterService: NewsletterService,
+    router: Router) {
     this.fillerNav = this.commonService.$sideNav;
     const userName = this.cookieService.get("UserName");
     this.userName = userName;
     const userRole = this.cookieService.get("UserRole");
     const authToken = this.cookieService.get("UserAuthToken");
+    const id = this.cookieService.get("UserId");
     if ( userName && !this.commonService.$shared ) {
       this.commonService.$shared = new CommonData();
       const u: User = new User();
       u.$name = userName;
       u.$role = userRole;
+      u.$_id = id;
       this.commonService.$shared.$user = u;
       this.role = userRole;
       this.signedIn = true;
@@ -74,7 +83,12 @@ export class AppComponent implements AfterViewInit {
           this.isAdmin = false;
       }
     });
-    
+    router.events.forEach((e) =>{
+      if(e instanceof NavigationStart){
+        (this.collapse.nativeElement.classList as DOMTokenList).add("collapsed");
+        (this.collapseMenu.nativeElement.classList as DOMTokenList).remove("show");
+      }
+    });
   }
   
 

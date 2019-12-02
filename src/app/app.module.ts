@@ -27,6 +27,7 @@ import { SignupComponent } from './components/signup/signup.component';
 import { MaterialModule } from './material/material.module';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { NewsletterService } from './services/newsletter.service';
+import { ProfileComponent } from './components/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { NewsletterService } from './services/newsletter.service';
     InviteComponent,
     SigninComponent,
     LogoutComponent,
+    ProfileComponent,
     ResultsComponent,
     SignupComponent,
     SigninComponent
